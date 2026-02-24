@@ -2,5 +2,5 @@
 | :--- | :--- | :--- |
 | Antonia | SPOERK | @antoniaspoerk |
 | Jione | KIM | @ionikim |
-| Marina | KOEHLI | [여기에 사용자명 입력] |
+| Marina | KOEHLI | @marinakoe |
 | Simon | KRUMMENACHER | @simonkrummenacher |
