@@ -1,3 +1,4 @@
+# Participants Information
 | First Name | Last Name | GitHub Username |
 | :--- | :--- | :--- |
 | Antonia | SPOERK | @antoniaspoerk |
