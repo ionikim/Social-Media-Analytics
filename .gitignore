@@ -1,0 +1,21 @@
+# data (raw EEG should NOT be tracked)
+data/raw/
+data/interim/
+data/processed/
+
+# results & figures (optional: keep small, ignore heavy)
+results/tmp/
+reports/tmp/
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# env
+.venv/
+env/
