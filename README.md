@@ -7,11 +7,11 @@
 | Simon | KRUMMENACHER | @simonkrummenacher |
 
 # Temporal Network Evolution in Pediatric EEG During Intractable Seizures
-## 👥 Research Questions
+## Research Questions
 1. How does modularity change before and during seizures?  
 2. Do specific electrode groups consistently form communities during seizure periods?
 ---
-## 📖 Project Description
+## Project Description
 This project analyzes how functional brain network organization changes before and during epileptic seizures using the **CHB-MIT EEG dataset**.  
 EEG recordings are segmented into **5-second time windows**, and functional connectivity networks are constructed using pairwise correlations between electrodes.  
 Graph-theoretical measures such as **degree centrality, eigenvector centrality, density, and modularity** are computed to characterize network structure.  
