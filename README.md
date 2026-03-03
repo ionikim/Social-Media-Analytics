@@ -6,15 +6,12 @@
 | Marina | KOEHLI | @marinakoe |
 | Simon | KRUMMENACHER | @simonkrummenacher |
 
-# Temporal Network Evolution in Pediatric EEG During Intractable Seizures
+# Temporal and Spatial Network Evolution in Pediatric EEG during Ictal and Interictal Periods
 ## Research Questions
-1. How does modularity change before and during seizures?  
+1. How does modularity change between interictal (between seizures) and ictal (during seizures)?
 2. Do specific electrode groups consistently form communities during seizure periods?
 ---
 ## Project Description
-This project analyzes how functional brain network organization changes before and during epileptic seizures using the **CHB-MIT EEG dataset**.  
-EEG recordings are segmented into **5-second time windows**, and functional connectivity networks are constructed using pairwise correlations between electrodes.  
-Graph-theoretical measures such as **degree centrality, eigenvector centrality, density, and modularity** are computed to characterize network structure.  
-Community detection algorithms are applied to identify modular organization across preictal and ictal states.  
-Key network metrics are partially implemented **from scratch** and benchmarked against standard Python libraries to evaluate correctness and performance.  
-The project aims to reveal structural reorganization patterns in brain networks during seizure events.
+The goal of this project is to analyze the temporal evolution of brain connectivity networks during and between epileptic seizures using pediatric EEG recordings. By constructing functional brain networks from EEG signals and applying community detection algorithms, we aim to identify how network structure changes between normal brain activity (interictal) and seizure (ictal) periods.   
+We analyze an EEG dataset with epileptic seizures from the CHB-MIT database. The input of our data pipeline consists of electrode recordings from one patient, representing the electrical activity of brain states between and during seizures as a time series. After applying filtering techniques, we segment the EEG signals into 5-second windows to enhance robustness. Next, we compute Pearson correlations across all electrodes within each window to construct a functional connectivity matrix. Here, each weighted connection between electrodes. Repeating this process across all windows produces a sequence of time-resolved functional brain networks. 
+Finally, we apply a community detection algorithm (Leiden and/or Louvain) to analyze both the temporal brain states and the spatial recruitment patterns, enabling us to identify which electrodes first join seizure-related communities (the output). 
