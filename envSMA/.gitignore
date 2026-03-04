@@ -1,0 +1,15 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*.venvSMA
+*.venv
+
+#vscode
+.vscode/
+
+# Python
+_pycache_/
+*.pyc
+
+#windows cache
+Thumbs.db
+
+
