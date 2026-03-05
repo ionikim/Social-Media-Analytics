@@ -6,7 +6,7 @@
 | Marina | KOEHLI | @marinakoe |
 | Simon | KRUMMENACHER | @simonkrummenacher |
 
-# Spatial Network Evolution in Pediatric EEG during Ictal and Interictal Periods
+# Temporal and Spatial Network Evolution in Pediatric EEG during Ictal and Interictal Periods
 ## Research Questions
 1. How does modularity change between interictal (between seizures) and ictal (during seizures)?
 2. Do specific electrode groups consistently form communities during seizure periods?
