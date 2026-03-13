@@ -10,5 +10,5 @@ These raw files are stored locally and are not uploaded to GitHub.
 For this study we selected recordings from a single patient in the CHB-MIT dataset.
 The patient was chosen because 1) the recordings contain clearly annotated seizure events, 2) sufficient recording length, and 3) consistent electrode configuration, enabling reliable comparison between ictal and interictal brain networks.
 
-##Goal
+## Goal
 Process data and upload analyzable Graph here
