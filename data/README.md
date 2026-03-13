@@ -5,3 +5,5 @@ This project uses the CHB-MIT Scalp EEG Database.
 2. Place the .edf files into:
    data/raw/
 Note: Raw EEG data is NOT included in this repository.
+
+Goal: process data and upload Graph here
