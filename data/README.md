@@ -17,3 +17,7 @@ The patient was chosen because 1) the recordings contain clearly annotated seizu
 
 ## Goal
 Process data and upload analyzable Graph here
+
+## Data Source & Reference
+Guttag, J. (2010). CHB-MIT Scalp EEG Database (version 1.0.0). PhysioNet. RRID:SCR_007345. https://doi.org/10.13026/C2K01R
+Ali Shoeb. Application of Machine Learning to Epileptic Seizure Onset Detection and Treatment. PhD Thesis, Massachusetts Institute of Technology, September 2009.
