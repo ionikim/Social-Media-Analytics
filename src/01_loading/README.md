@@ -31,6 +31,7 @@ The preprocessing steps transform raw EEG signals into structured window-based d
 5. 5-second window segmentation  
 6. Seizure labeling (ictal / interictal)  
 7. Feature extraction (window power)
+8. Repeat for rest of the files
 ---
 
 ## Output
