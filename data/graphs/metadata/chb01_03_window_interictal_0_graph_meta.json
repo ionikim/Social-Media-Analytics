@@ -1,0 +1,15 @@
+{
+  "graph_id": "chb01_03_window_interictal_0",
+  "source_edf": "data/raw/chb01_03.edf",
+  "window_id": "window_interictal_0",
+  "label": "interictal",
+  "graph_type": "multiplex_hvg",
+  "n_electrodes": 23,
+  "n_timepoints": 1280,
+  "n_nodes_total": 29440,
+  "n_edges_total": 381667,
+  "n_intra_edges": 57827,
+  "n_inter_edges": 323840,
+  "time_start_s": 0.0,
+  "time_end_s": 4.99609375
+}
