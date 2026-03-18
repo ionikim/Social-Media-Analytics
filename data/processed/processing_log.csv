@@ -1,0 +1,2 @@
+edf_file,status,message,saved_labeled_df,saved_ictal_window,saved_interictal_window
+data/raw/chb01_03.edf,success,ok,data/processed/labeled_signals/chb01_03.parquet,data/windows/signals/window_ictal_0.parquet,data/windows/signals/window_interictal_0.parquet
