@@ -1,0 +1,197 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2026-03-19">
+    <creator>NetworkX 3.6.1</creator>
+  </meta>
+  <graph defaultedgetype="undirected" mode="static" name="">
+    <attributes mode="static" class="node">
+      <attribute id="0" title="delta_degree_entropy" type="double" />
+      <attribute id="1" title="delta_clustering" type="double" />
+      <attribute id="2" title="delta_avg_shortest_path_lcc" type="double" />
+    </attributes>
+    <nodes>
+      <node id="FP1-F7" label="FP1-F7">
+        <attvalues>
+          <attvalue for="0" value="-0.031192625866375057" />
+          <attvalue for="1" value="0.0033153521825397547" />
+          <attvalue for="2" value="1.3682698885848303" />
+        </attvalues>
+      </node>
+      <node id="F7-T7" label="F7-T7">
+        <attvalues>
+          <attvalue for="0" value="0.0002460039834053518" />
+          <attvalue for="1" value="0.0036129712301586903" />
+          <attvalue for="2" value="-6.540507720875684" />
+        </attvalues>
+      </node>
+      <node id="T7-P7" label="T7-P7">
+        <attvalues>
+          <attvalue for="0" value="0.022478349539410747" />
+          <attvalue for="1" value="0.005138268849206429" />
+          <attvalue for="2" value="-7.47512094409695" />
+        </attvalues>
+      </node>
+      <node id="P7-O1" label="P7-O1">
+        <attvalues>
+          <attvalue for="0" value="-0.028297246594228387" />
+          <attvalue for="1" value="0.0041555059523809" />
+          <attvalue for="2" value="-4.407134480062549" />
+        </attvalues>
+      </node>
+      <node id="FP1-F3" label="FP1-F3">
+        <attvalues>
+          <attvalue for="0" value="-0.1327692082055809" />
+          <attvalue for="1" value="-0.004045702561327635" />
+          <attvalue for="2" value="-8.69217039679437" />
+        </attvalues>
+      </node>
+      <node id="F3-C3" label="F3-C3">
+        <attvalues>
+          <attvalue for="0" value="-0.030691657445944376" />
+          <attvalue for="1" value="-0.0032149057539682113" />
+          <attvalue for="2" value="-6.057962763878031" />
+        </attvalues>
+      </node>
+      <node id="C3-P3" label="C3-P3">
+        <attvalues>
+          <attvalue for="0" value="-0.043551867298346814" />
+          <attvalue for="1" value="-0.004408425775613289" />
+          <attvalue for="2" value="-3.7400361610633297" />
+        </attvalues>
+      </node>
+      <node id="P3-O1" label="P3-O1">
+        <attvalues>
+          <attvalue for="0" value="-0.11510149931459157" />
+          <attvalue for="1" value="-0.00392990689865691" />
+          <attvalue for="2" value="-2.1399213252541074" />
+        </attvalues>
+      </node>
+      <node id="FP2-F4" label="FP2-F4">
+        <attvalues>
+          <attvalue for="0" value="-0.07786933550105912" />
+          <attvalue for="1" value="-0.0054717374639249305" />
+          <attvalue for="2" value="-4.2296899433150905" />
+        </attvalues>
+      </node>
+      <node id="F4-C4" label="F4-C4">
+        <attvalues>
+          <attvalue for="0" value="-0.15869985687636357" />
+          <attvalue for="1" value="-0.011124808351370863" />
+          <attvalue for="2" value="-4.2151070172009355" />
+        </attvalues>
+      </node>
+      <node id="C4-P4" label="C4-P4">
+        <attvalues>
+          <attvalue for="0" value="-0.06455690235570755" />
+          <attvalue for="1" value="-0.019856150793650773" />
+          <attvalue for="2" value="1.0412920250195477" />
+        </attvalues>
+      </node>
+      <node id="P4-O2" label="P4-O2">
+        <attvalues>
+          <attvalue for="0" value="-0.08156062060999192" />
+          <attvalue for="1" value="-0.02100880456349208" />
+          <attvalue for="2" value="-0.1021269057857701" />
+        </attvalues>
+      </node>
+      <node id="FP2-F8" label="FP2-F8">
+        <attvalues>
+          <attvalue for="0" value="-0.13936749483933797" />
+          <attvalue for="1" value="-0.0213181479978356" />
+          <attvalue for="2" value="0.029492034792806265" />
+        </attvalues>
+      </node>
+      <node id="F8-T8" label="F8-T8">
+        <attvalues>
+          <attvalue for="0" value="-0.10141419323841161" />
+          <attvalue for="1" value="-0.014032118055555598" />
+          <attvalue for="2" value="3.696597683737295" />
+        </attvalues>
+      </node>
+      <node id="T8-P8-0" label="T8-P8-0">
+        <attvalues>
+          <attvalue for="0" value="-0.03677368974039519" />
+          <attvalue for="1" value="-0.01477988591269841" />
+          <attvalue for="2" value="5.448063672791243" />
+        </attvalues>
+      </node>
+      <node id="P8-O2" label="P8-O2">
+        <attvalues>
+          <attvalue for="0" value="-0.07178670926314235" />
+          <attvalue for="1" value="-0.026507316468253883" />
+          <attvalue for="2" value="1.6668564308053178" />
+        </attvalues>
+      </node>
+      <node id="FZ-CZ" label="FZ-CZ">
+        <attvalues>
+          <attvalue for="0" value="-0.11726715731455872" />
+          <attvalue for="1" value="0.00031560019841270215" />
+          <attvalue for="2" value="-10.773343432369039" />
+        </attvalues>
+      </node>
+      <node id="CZ-PZ" label="CZ-PZ">
+        <attvalues>
+          <attvalue for="0" value="-0.12437143550122487" />
+          <attvalue for="1" value="-0.0054666427322677125" />
+          <attvalue for="2" value="-11.319928899530886" />
+        </attvalues>
+      </node>
+      <node id="P7-T7" label="P7-T7">
+        <attvalues>
+          <attvalue for="0" value="5.99936768042042e-05" />
+          <attvalue for="1" value="0.005515252976190377" />
+          <attvalue for="2" value="-11.418528879984365" />
+        </attvalues>
+      </node>
+      <node id="T7-FT9" label="T7-FT9">
+        <attvalues>
+          <attvalue for="0" value="-0.10985598448652434" />
+          <attvalue for="1" value="-0.010177951388888995" />
+          <attvalue for="2" value="2.270842699374512" />
+        </attvalues>
+      </node>
+      <node id="FT9-FT10" label="FT9-FT10">
+        <attvalues>
+          <attvalue for="0" value="-0.1793546114593867" />
+          <attvalue for="1" value="-0.028164682539682517" />
+          <attvalue for="2" value="6.764056391712273" />
+        </attvalues>
+      </node>
+      <node id="FT10-T8" label="FT10-T8">
+        <attvalues>
+          <attvalue for="0" value="-0.186173473568362" />
+          <attvalue for="1" value="-0.005034412202380878" />
+          <attvalue for="2" value="-9.566891858874119" />
+        </attvalues>
+      </node>
+      <node id="T8-P8-1" label="T8-P8-1">
+        <attvalues>
+          <attvalue for="0" value="-0.03677368974039519" />
+          <attvalue for="1" value="-0.01477988591269841" />
+          <attvalue for="2" value="5.448063672791243" />
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge source="FP1-F7" target="T7-P7" id="0" weight="-0.6582517454199196" />
+      <edge source="FP1-F7" target="FT9-FT10" id="1" weight="-0.6675417192545202" />
+      <edge source="T7-P7" target="P7-T7" id="2" weight="-0.7570477934470305" />
+      <edge source="P7-O1" target="P3-O1" id="3" weight="0.6146214874581493" />
+      <edge source="FP1-F3" target="CZ-PZ" id="4" weight="-0.6042076689547858" />
+      <edge source="C3-P3" target="C4-P4" id="5" weight="0.6024456510312801" />
+      <edge source="C3-P3" target="CZ-PZ" id="6" weight="0.7731066868287726" />
+      <edge source="FP2-F4" target="C4-P4" id="7" weight="-0.72298889054065" />
+      <edge source="FP2-F4" target="CZ-PZ" id="8" weight="-0.6654536301066138" />
+      <edge source="F4-C4" target="FZ-CZ" id="9" weight="0.6446982099832179" />
+      <edge source="C4-P4" target="CZ-PZ" id="10" weight="0.8023734274162441" />
+      <edge source="P4-O2" target="P8-O2" id="11" weight="0.722743471297032" />
+      <edge source="P4-O2" target="FT10-T8" id="12" weight="-0.6803300993761783" />
+      <edge source="FP2-F8" target="T8-P8-0" id="13" weight="-0.6264132463547899" />
+      <edge source="FP2-F8" target="T8-P8-1" id="14" weight="-0.6264132463547899" />
+      <edge source="F8-T8" target="P8-O2" id="15" weight="-0.688942082651036" />
+      <edge source="F8-T8" target="FT10-T8" id="16" weight="0.6798550467236067" />
+      <edge source="T8-P8-0" target="T8-P8-1" id="17" weight="1.0" />
+      <edge source="P8-O2" target="FT10-T8" id="18" weight="-0.6799262952912504" />
+    </edges>
+  </graph>
+</gexf>
