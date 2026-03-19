@@ -1,3 +1,0 @@
-window_id,source_edf,label,selection_rule,start_idx,end_idx,start_time_s,end_time_s,n_samples,window_size_s,sampling_rate_hz
-window_ictal_0,data/raw/chb01_03.edf,ictal,onset,766976,768255,2996.0,3000.99609375,1280,5,256
-window_interictal_0,data/raw/chb01_03.edf,interictal,first_valid_interictal,0,1279,0.0,4.99609375,1280,5,256
