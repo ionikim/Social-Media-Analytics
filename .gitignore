@@ -1,1 +1,5 @@
 data/processed/labeled_signals/*.parquet
+
+# Large dense adjacency files
+data/graphs/adjacency/
+data/graphs/*_adj.csv
