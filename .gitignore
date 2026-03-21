@@ -1,19 +1,5 @@
-# results & figures (optional: keep small, ignore heavy)
-results/tmp/
-reports/tmp/
+data/processed/labeled_signals/*.parquet
 
-# python
-__pycache__/
-*.pyc
-.ipynb_checkpoints/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# env
-env/
-*.venv
-
-#vscode
-.vscode/
+# Large dense adjacency files
+data/graphs/adjacency/
+data/graphs/*_adj.csv
