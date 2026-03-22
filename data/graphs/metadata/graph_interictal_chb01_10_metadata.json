@@ -1,0 +1,19 @@
+{
+  "graph_id": "graph_interictal_chb01_10",
+  "source_edf": "data\\raw\\chb01_10.edf",
+  "window_id": "window_interictal_chb01_10",
+  "label": "interictal",
+  "graph_type": "multiplex_ordinal_network",
+  "ordinal_order": 5,
+  "ordinal_delay": 1,
+  "n_nodes": 1545,
+  "n_edges": 19068,
+  "n_intra_edges": 3386,
+  "n_inter_edges": 15682,
+  "n_layers": 23,
+  "n_timepoints": 2560,
+  "adjacency_format": "scipy_sparse_npz",
+  "intra_edge_weight": "ordinal transition count",
+  "inter_edge_weight": "shared ordinal pattern coupling",
+  "intra_keep_ratio": null
+}

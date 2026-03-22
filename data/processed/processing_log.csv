@@ -1,0 +1,3 @@
+source_type,edf_file,annotation_file,status,message,saved_labeled_df,saved_window,saved_metadata
+ictal,data\raw\chb01_03.edf,data\raw\chb01_03.edf.seizures,success,ictal window extracted successfully,data\processed\labeled_signals\chb01_03.parquet,data\windows\signals\window_ictal_chb01_03.parquet,data\processed\file_metadata\chb01_03.json
+interictal,data\raw\chb01_10.edf,,success,interictal window extracted successfully,data\processed\labeled_signals\chb01_10.parquet,data\windows\signals\window_interictal_chb01_10.parquet,data\processed\file_metadata\chb01_10.json

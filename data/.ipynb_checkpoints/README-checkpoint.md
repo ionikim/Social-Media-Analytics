@@ -1,0 +1,23 @@
+## Data
+This project uses the CHB-MIT Scalp EEG Database.
+1. Download the dataset from:
+   https://physionet.org/content/chbmit/1.0.0/
+2. Place the .edf files into:  
+   data/raw/
+Note: Raw EEG data is NOT included in this repository.
+
+Goal: process data and upload Graph here
+* Note: Put raw EEG EDF files here.
+Example: data/raw/chb01_15.edf
+These raw files are stored locally and are not uploaded to GitHub.
+
+## Data selection criterion
+For this study we selected recordings from a single patient in the CHB-MIT dataset.
+The patient was chosen because 1) the recordings contain clearly annotated seizure events, 2) sufficient recording length, and 3) consistent electrode configuration, enabling reliable comparison between ictal and interictal brain networks.
+
+## Goal
+Process data and upload analyzable Graph here
+
+## Data Source & Reference
+Guttag, J. (2010). CHB-MIT Scalp EEG Database (version 1.0.0). PhysioNet. RRID:SCR_007345. https://doi.org/10.13026/C2K01R
+Ali Shoeb. Application of Machine Learning to Epileptic Seizure Onset Detection and Treatment. PhD Thesis, Massachusetts Institute of Technology, September 2009.
