@@ -39,3 +39,17 @@ Our network will be visualized with Gephi to have an interactive interface and m
 ### 4) Analysis and Interpretation (Antonia Spörk, Simon Krummenacher): 
 
 We will benchmark our solution against existing algorithms and evaluate the strengths and limitations of our project. If capacity allows, we might additionally predict other seizure states within/between subjects and/or conduct an influencer analysis of seizure source electrodes. 
+
+
+---
+## Documentation of work
+| Step                                           | Explanation/Sub-steps                                            | Name              |
+| :--------------------------------------------- | :--------------------------------------------------------------- | :---------------- |
+| Selection of topic and database                |                                                                  | Everyone          |
+| Preprocessing                                  | Re-reference and bandpass filter                                 | Marina            |
+|                                                | Automate the process for other files, create DataFrame           | Marina and Ji-One |
+| Multiplex horizontal visibility graph creation | Select windows (one ictal, one interictal)                       | Ji-One and Marina |
+|                                                | Segment DataFrame into windows and averaging                     | Marina            |
+|                                                | Create node list, inter- and intra-layer edges, adjacency matrix | Ji-One            |
+|                                                | Visualize it in Gephi, compute first exploratory metrics         | Ji-One and Marina |
+| Ordinal Pattern Transition Network creation    | Remove re-referencing, create OPTN, identify electrodes with stronger ictal-interictal differences, visualize it in Gephi                                                                                  | Ji-One            |
