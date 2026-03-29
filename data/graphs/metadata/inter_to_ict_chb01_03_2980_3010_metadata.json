@@ -1,0 +1,17 @@
+{
+  "graph_id": "inter_to_ict_chb01_03_2980_3010",
+  "source_file": "data\\raw\\chb01_03.edf",
+  "window_id": "inter_to_ict_chb01_03_2980_3010",
+  "label": "ictal",
+  "n_nodes": 176640,
+  "n_edges": 1978201,
+  "n_intra_edges": 35161,
+  "n_inter_edges": 1943040,
+  "n_layers": 23,
+  "n_timepoints": 7680,
+  "window_start_time_s": 2980.0,
+  "window_end_time_s": 3009.99609375,
+  "adjacency_format": "scipy_sparse_npz",
+  "intra_edge_weight": "abs(amplitude_i - amplitude_j)",
+  "intra_keep_ratio": 0.1
+}

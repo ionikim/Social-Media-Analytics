@@ -1,0 +1,29 @@
+[33mcommit 22217b33b8deea6885c4b3b975fe8dd9f89ba544[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: marinakoe <marinakoehli@outlook.com>
+Date:   Sun Mar 29 21:13:11 2026 +0200
+
+    csv file conversion and continuous graph creation
+
+ .ipynb_checkpoints/Untitled1-checkpoint.ipynb      |       6 [32m+[m
+ .../default-37a8.jupyterlab-workspace              |       2 [32m+[m[31m-[m
+ Untitled1.ipynb                                    |      33 [32m+[m
+ ..._to_ict_chb01_03_2980_3010_adjacency_sparse.npz |     Bin [31m0[m -> [32m8537218[m bytes
+ .../inter_to_ict_chb01_03_2980_3010_edges.csv      | 1978202 [32m+++++++++++++++++[m
+ .../inter_to_ict_chb01_03_2980_3010_layer_info.csv |      24 [32m+[m
+ .../inter_to_ict_chb01_03_2980_3010_metadata.json  |      17 [32m+[m
+ ...inter_to_ict_chb01_03_2980_3010_node_index.json |  176642 [32m++[m
+ ...nter_to_ict_chb01_03_2980_3010_node_labels.json |  176642 [32m++[m
+ .../inter_to_ict_chb01_03_2980_3010_nodes.csv      |  176641 [32m++[m
+ .../inter_to_ict_chb01_03_2980_3010_window.parquet |     Bin [31m0[m -> [32m1758552[m bytes
+ data/raw/chb01_03.edf                              |     Bin [31m0[m -> [32m42399744[m bytes
+ data/raw/chb01_03.edf.seizures                     |     Bin [31m0[m -> [32m54[m bytes
+ .../HVG_creation_250326-checkpoint.ipynb           |     234 [32m+[m
+ ...sing_210326_interictal_changed-checkpoint.ipynb |    1696 [32m+[m
+ ...continuous_interictal_to_ictal-checkpoint.ipynb |     483 [32m+[m
+ src/01_loading/HVG_creation_250326.ipynb           |    1436 [32m+[m[31m-[m
+ .../preprocessing_210326_interictal_changed.ipynb  |    3286 [32m+[m[31m-[m
+ ...290326_HVG_continuous_interictal_to_ictal.ipynb |     483 [32m+[m
+ src/02_management/npz_to_csv.ipynb                 |     229 [32m+[m
+ .../.ipynb_checkpoints/README-checkpoint.md        |       2 [32m+[m
+ src/04_visualization/README.md                     |       2 [32m+[m
+ 22 files changed, 2513187 insertions(+), 2873 deletions(-)
