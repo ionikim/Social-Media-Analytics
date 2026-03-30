@@ -1,3 +1,22 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+.env
+.venv
+venv/
+ENV/
+env/
+
+.ipynb_checkpoints
+
+.DS_Store        # Mac
+Thumbs.db        # Windows
+
+*.log
+*.tmp
+*.swp
+
 data/processed/labeled_signals/*.parquet
 
 # Large dense adjacency files
