@@ -57,3 +57,5 @@ We will benchmark our solution against existing algorithms and evaluate the stre
 | Continuous Multiplex HVG creation              | Apply code from categorical HVG graphs to one continuous window (interictal to ictal) | Marina |
 |                                                | Storage in LFS                                                   | Marina            |
 | Applied Stream More Algorithm                  |                                                                  | Antonia   
+| Applied Hierarchical Clustering                |                                                                  | Antonia   
+| Build a Streamlit Live Demo                    |                                                                  | Antonia   
