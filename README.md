@@ -59,3 +59,4 @@ We will benchmark our solution against existing algorithms and evaluate the stre
 | Applied Stream More Algorithm                  |                                                                  | Antonia   
 | Applied Hierarchical Clustering                |                                                                  | Antonia   
 | Build a Streamlit Live Demo                    |                                                                  | Antonia   
+| Applied Laplacian Spectral Clustering          |                                                                  | Antonia  
