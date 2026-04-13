@@ -58,5 +58,5 @@ We will benchmark our solution against existing algorithms and evaluate the stre
 |                                                | Storage in LFS                                                   | Marina            |
 | Applied Stream More Algorithm                  |                                                                  | Antonia   
 | Applied Hierarchical Clustering                |                                                                  | Antonia   
-| Build a Streamlit Live Demo                    |                                                                  | Antonia   
+| Build a Streamlit Live Demo                    | Built an interactive live demonstration of the sliding window network analysis using Streamlit, with auto-playing animation showing how the EEG functional connectivity network evolves second by second across the interictal-to-ictal transition                                                                 | Antonia   
 | Applied Laplacian Spectral Clustering          |                                                                  | Antonia  
