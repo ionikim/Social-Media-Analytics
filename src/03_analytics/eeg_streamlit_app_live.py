@@ -20,7 +20,7 @@ st.set_page_config(
 )
  
 # ── constants ──────────────────────────────────────────────────────────────
-NPZ_PATH      = "/Users/antoniaspoerk/Desktop/Digital Neuroscience /Social Media Analytics/epilepsy_pediatrics_EEG/data/graphs/adjacency_sparse/inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz"
+NPZ_PATH      = '/Users/antoniaspoerk/Desktop/Digital Neuroscience /Social Media Analytics/epilepsy_pediatrics_EEG/data/graphs/adjacency_sparse/inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz'
 N_CHANNELS    = 23
 N_TIMEPOINTS  = 7680
 FS            = 256
