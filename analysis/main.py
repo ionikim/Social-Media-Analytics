@@ -37,15 +37,15 @@ print("Adjacency shape:", A.shape)
 print("Non-zero edges (roh):", A.nnz)
 
 # ===============================
-# 4. Thresholding (EEG-Noise reduzieren)
+# 4. Thresholding (Noise-Reduktion)
 # ===============================
-threshold = 0.2  # Startwert, später variieren
+threshold = 0.2
 
 A = A.tocsr()
 A.data[A.data < threshold] = 0
 A.eliminate_zeros()
 
-print("Non-zero edges (nach Thresholding):", A.nnz)
+print("Non-zero edges (nach Threshold):", A.nnz)
 
 # ===============================
 # 5. Graph erzeugen
@@ -60,11 +60,9 @@ print(
 # ===============================
 # 6. Label Propagation Algorithm
 # ===============================
-def label_propagation(G, initial_labels=None, max_iter=100):
-    if initial_labels is None:
-        initial_labels = {}
-
-    labels = initial_labels.copy()
+def label_propagation(G, max_iter=100):
+    # Standard-LPA: jedes Node startet mit eigenem Label
+    labels = {node: node for node in G.nodes()}
 
     for it in range(max_iter):
         changes = 0
@@ -72,14 +70,8 @@ def label_propagation(G, initial_labels=None, max_iter=100):
         random.shuffle(nodes)
 
         for node in nodes:
-            # feste Labels nicht überschreiben
-            if node in initial_labels:
-                continue
-
             neighbor_labels = [
-                labels[n]
-                for n in G.neighbors(node)
-                if n in labels
+                labels[n] for n in G.neighbors(node)
             ]
 
             if not neighbor_labels:
@@ -87,7 +79,7 @@ def label_propagation(G, initial_labels=None, max_iter=100):
 
             new_label = Counter(neighbor_labels).most_common(1)[0][0]
 
-            if labels.get(node) != new_label:
+            if labels[node] != new_label:
                 labels[node] = new_label
                 changes += 1
 
@@ -98,17 +90,90 @@ def label_propagation(G, initial_labels=None, max_iter=100):
     return labels
 
 # ===============================
-# 7. Unsupervised LPA ausführen
+# 7. LPA einmal ausführen
 # ===============================
 labels = label_propagation(G)
 
 # ===============================
-# 8. Communities aus Labels bauen
+# 8. Communities bauen
 # ===============================
 communities = defaultdict(list)
 for node, label in labels.items():
     communities[label].append(node)
 
 print(f"\nGefundene Communities: {len(communities)}")
-for cid, nodes in communities.items():
-    print(f"Community {cid}: {len(nodes)} Knoten")
+
+# ===============================
+# Security-Check (WICHTIG!)
+# ===============================
+if len(communities) == 0:
+    raise RuntimeError(
+        "LPA hat keine Communities erzeugt. "
+        "Mögliche Ursachen: falsche Initialisierung, zu hoher Threshold "
+        "oder isolierter Graph."
+    )
+
+# ===============================
+# 8a. Community-Größen & Coverage
+# ===============================
+sizes = sorted([len(v) for v in communities.values()], reverse=True)
+print("Top Community-Größen:", sizes[:10])
+print("Größte Community-Anteil:", sizes[0] / G.number_of_nodes())
+
+coverage = len(labels) / G.number_of_nodes()
+print("Label-Abdeckung:", coverage)
+
+# ===============================
+# 9. Stabilität über mehrere Runs
+# ===============================
+def run_lpa_once():
+    return label_propagation(G)
+
+def label_agreement(a, b):
+    common = set(a) & set(b)
+    if len(common) == 0:
+        return 0.0
+    return sum(a[n] == b[n] for n in common) / len(common)
+
+runs = [run_lpa_once() for _ in range(10)]
+agreements = [
+    label_agreement(runs[0], r)
+    for r in runs[1:]
+]
+
+print("Label-Stabilitäten:", agreements)
+print("Ø Stabilität:", np.mean(agreements))
+
+# ===============================
+# 10. Modularity (realer Graph)
+# ===============================
+from networkx.algorithms.community import modularity
+
+communities_list = [set(v) for v in communities.values()]
+Q_real = modularity(G, communities_list)
+
+print("Modularity (real):", Q_real)
+
+# ===============================
+# 11. Nullmodell (Degree-erhaltend)
+# ===============================
+G_rand = nx.configuration_model(
+    [d for _, d in G.degree()],
+    create_using=nx.Graph()
+)
+G_rand.remove_edges_from(nx.selfloop_edges(G_rand))
+
+labels_rand = label_propagation(G_rand)
+
+communities_rand = defaultdict(list)
+for n, l in labels_rand.items():
+    communities_rand[l].append(n)
+
+Q_rand = modularity(
+    G_rand,
+    [set(v) for v in communities_rand.values()]
+)
+
+print("Modularity (random):", Q_rand)
+
+print("\nΔ Modularity (real − random):", Q_real - Q_rand)
