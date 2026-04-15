@@ -62,9 +62,4 @@ We will benchmark our solution against existing algorithms and evaluate the stre
 | Applied Laplacian Spectral Clustering          | Implemented spectral clustering from scratch: constructed weighted adjacency graphs from thresholded correlation matrices, computed the normalised graph Laplacian (L = I - D^(-1/2) A D^(-1/2)), eigendecomposed it to embed channels in eigenspace, and clustered using a custom k-means++ implementation. Applied across all sliding windows to track network topology changes across the seizure transition, revealing a sharp eigengap peak immediately before onset followed by collapse of cluster structure during the ictal phase                                                                 | Antonia  
 | Apllied Label Propagation Algorithm (LPA)      | Applied the LPA from scratch to HVG adjacency matrix.  | Simon            |
 | checked for benchmarking approaches  1   | Community Detection in Social Networks: An In-depth Benchmarking Study with a Procedure-Oriented Framework -> LPA works best but only with groud truth! Thus we need to evaluate without ground thruth  | Simon            |
-| checked for benchmarking approaches  2   | work in progress: find a solution without groundtruth -> Evaluation using Clustering Quality Measures:
-↭ Clustering quality measures, e.g., SSE (sum of squared
-errors) or inter- cluster distance 
-↭ Quality measures used to evaluate community detection
-should be different from the ones used to find
-communities.  | Simon            |
+| checked for benchmarking approaches  2   | work in progress: find a solution without groundtruth -> Evaluation using Clustering Quality Measures: Clustering quality measures, e.g., SSE (sum of squared errors) or inter- cluster distance  Quality measures used to evaluate community detection should be different from the ones used to find communities.  | Simon            |
