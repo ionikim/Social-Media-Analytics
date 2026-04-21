@@ -8,23 +8,26 @@
 
 # Temporal and Spatial Network Evolution in Pediatric EEG during Ictal and Interictal Periods
 ## Research Questions
-1. How does modularity change between interictal (between seizures) and ictal (during seizures)?
-2. Do specific electrode groups consistently form communities during seizure periods?
+1. How does the Visibility Graph structure (degree, edge density) change between interictal and ictal periods?
+2. Do specific electrodes show consistently higher VG activity during seizure periods?
+3. Can community structure in the functional connectivity network derived from VG degree sequences distinguish ictal from interictal brain states?
 ---
 ## Project Description
-The goal of this project is to analyze the temporal evolution of brain connectivity networks during and between epileptic seizures using pediatric EEG recordings. By constructing functional brain networks from EEG signals and applying community detection algorithms, we aim to identify how network structure changes between normal brain activity (interictal) and seizure (ictal) periods.   
-We analyze an EEG dataset with epileptic seizures from the CHB-MIT database. The input of our data pipeline consists of electrode recordings from one patient, representing the electrical activity of brain states between and during seizures as a time series. After applying filtering techniques, we segment the EEG signals into 5-second windows to enhance robustness. Next, we compute Pearson correlations across all electrodes within each window to construct a functional connectivity matrix. Here, each weighted connection between electrodes. Repeating this process across all windows produces a sequence of time-resolved functional brain networks. 
-Finally, we apply a community detection algorithm (Leiden and/or Louvain) to analyze both the temporal brain states and the spatial recruitment patterns, enabling us to identify which electrodes first join seizure-related communities (the output). 
+The goal of this project is to analyze the temporal evolution of brain connectivity networks during and between epileptic seizures using pediatric EEG recordings. By constructing Visibility Graphs (VG) from EEG signals and applying network analysis methods, we aim to identify how network structure changes between normal brain activity (interictal) and seizure (ictal) periods.
+We analyze an EEG dataset with epileptic seizures from the CHB-MIT database. The input of our data pipeline consists of electrode recordings from one patient (CHB01), representing the electrical activity of brain states 15 seconds before and during a seizure as a time series. We construct a Visibility Graph directly from the raw EEG time series — each timepoint becomes a node, and two timepoints are connected if no taller amplitude value blocks the line of sight between them. This graph-based representation captures the regularity and periodicity of the EEG signal without requiring correlation computation. We analyze how the VG structure evolves second by second across 30 windows, enabling us to identify seizure onset and quantify the transition from complex irregular brain activity to rhythmic ictal activity.
 ---
 ### 1) Network Loading & Data Management (Ji-one Kim, Marina Köhli): 
 
-We use a data set from the CHB-MIT Scalp EEG Database, which contains EEG recordings from 5 male (ages 3–22) and 17 (ages 1.5–19) female pediatric patients with intractable seizures. Recordings typically consist of 23 EEG channels, which were all sampled at 256 Hz with 16-bit resolution. Data, including EEG files and associated demographic data, can be downloaded in EDF (European Data Format) format. Each channel records electrical brain activity over time. For feasibility, we reduced ourselves to analyzing the data of one patient. 
-
-For analysis, we will divide the continuous data into 5-second time windows to enhance signal robustness. This allows us to construct a sequence of networks that represent evolving brain connectivity.  We will select a number of time windows for each of the two states to ensure feasibility, since the whole dataset contains more than seven hours of recordings. 
-
-The EEG recordings will be processed using the MNE-Python library. Processing includes bandpass filtering (1–45 Hz), which excludes low-frequency drift and high-frequency noise. In Python we will manually split the time series into 5-second windows and label them into interictal (between seizure) and ictal (during seizure) with the help of a file containing seizure on/off markers. For each 5-second window, we will construct a functional connectivity matrix by computing pairwise Pearson correlation between all electrodes. 
-
-For each window, a 23 × 23 connectivity matrix will be constructed. To avoid a tense network, we will keep only the strongest correlations. The matrix can then be interpreted as a weighted, undirected graph, where the nodes are electrodes. The edges represent the functional connectivity between electrodes, and the edge weights show the strength of the correlations.  
+We use a dataset from the CHB-MIT Scalp EEG Database, which contains EEG recordings from 5 male (ages 3–22) and 17 female (ages 1.5–19) pediatric patients with intractable seizures. Recordings consist of 23 EEG channels sampled at 256 Hz with 16-bit resolution. Data is available in EDF (European Data Format). For feasibility, we focus on one patient (CHB01), analyzing a 30-second segment centered on a seizure onset (15s pre-ictal + 15s ictal).
+Rather than computing pairwise correlations between electrodes, we construct a Visibility Graph (VG) independently for each electrode's time series. For each 1-second window (256 timepoints at 256 Hz), two timepoints tit_i
+ti​ and tjt_j
+tj​ are connected by an edge if and only if:
+x(tk)<x(ti)+x(tj)−x(ti)tj−ti(tk−ti)∀tk∈(ti,tj)x(t_k) < x(t_i) + \frac{x(t_j) - x(t_i)}{t_j - t_i}(t_k - t_i) \quad \forall t_k \in (t_i, t_j)x(tk​)<x(ti​)+tj​−ti​x(tj​)−x(ti​)​(tk​−ti​)∀tk​∈(ti​,tj​)
+This means no intermediate value blocks the line of sight between them. The resulting graph encodes the temporal structure and regularity of the EEG signal: periodic signals (typical of seizures) produce many long-range visibility connections and high node degree, while complex irregular signals (typical of normal brain activity) produce sparse, short-range connections.
+The pre-computed adjacency matrix is provided as a sparse matrix of shape 176,640 × 176,640, encoding all VG connections across 23 electrodes × 7,680 timepoints. Node index kk
+k maps to electrode ⌊k/7680⌋\lfloor k / 7680 \rfloor
+⌊k/7680⌋ at timepoint k mod 7680k \bmod 7680
+kmod7680.
 
 ### 2) Network Exploration & Analytics (Simon Krummenacher, Antonia Spörk): 
 
@@ -34,7 +37,16 @@ To identify groups of electrodes that interact strongly, we apply community dete
 
 ### 3) Network Visualization (Marina Köhli, Ji-One Kim): 
 
-Our network will be visualized with Gephi to have an interactive interface and matplotlib in Python. In our visualizations we want to 1) compare ictal and interictal networks, 2) show communities in different colors (after applying community detection), 3) analyze the modularity between states and 4) analyze the centrality of each electrode in the network.  
+We visualize the evolving VG network using two complementary approaches:
+1. Cosmograph (GPU-accelerated browser visualization):
+
+cosmograph_nodes_CZ.csv + cosmograph_edges_CZ.csv: CZ electrode VG with timeline (7,680 nodes, 30 windows), enabling second-by-second animation in Cosmograph.
+cosmo_freq_nodes_preictal/ictal.csv + cosmo_freq_edges_preictal/ictal.csv: All 23 electrodes, frequency-weighted static comparison (5,888 nodes per file). With electrode-based clustering in Cosmograph, the ictal graph shows tight, well-separated electrode communities while the pre-ictal graph is diffuse — directly reflecting VG edge density differences.
+
+2. Html based interactive visaulization
+eeg_vg_comparison_static.html — Compares pre-ictal and ictal circular visibility graphs for a selected electrode, highlighting sparse vs dense connectivity.
+eeg_visibility_graph_online_mini_timepoint.html — Animates all 23 electrodes as circular visibility graphs to show seizure evolution over time.
+eeg_vg_network_inter.html — Visualizes changing functional connectivity across 23 electrodes during seizure onset.
 
 ### 4) Analysis and Interpretation (Antonia Spörk, Simon Krummenacher): 
 
