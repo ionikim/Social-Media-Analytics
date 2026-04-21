@@ -35,12 +35,12 @@ To identify groups of electrodes that interact strongly, we apply community dete
 
 We visualize the evolving VG network using two complementary approaches:
 
-1. Cosmograph (GPU-accelerated browser visualization):
+1. Cosmograph:
 
 cosmograph_nodes_CZ.csv + cosmograph_edges_CZ.csv: CZ electrode VG with timeline (7,680 nodes, 30 windows), enabling second-by-second animation in Cosmograph.
 cosmo_freq_nodes_preictal/ictal.csv + cosmo_freq_edges_preictal/ictal.csv: All 23 electrodes, frequency-weighted static comparison (5,888 nodes per file). With electrode-based clustering in Cosmograph, the ictal graph shows tight, well-separated electrode communities while the pre-ictal graph is diffuse — directly reflecting VG edge density differences.
 
-2. Html based interactive visaulization
+2. Html-based interactive visaulization:
 
 eeg_vg_comparison_static.html — Compares pre-ictal and ictal circular visibility graphs for a selected electrode, highlighting sparse vs dense connectivity.
 eeg_visibility_graph_online_mini_timepoint.html — Animates all 23 electrodes as circular visibility graphs to show seizure evolution over time.
