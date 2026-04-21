@@ -13,21 +13,17 @@
 3. Can community structure in the functional connectivity network derived from VG degree sequences distinguish ictal from interictal brain states?
 ---
 ## Project Description
+
 The goal of this project is to analyze the temporal evolution of brain connectivity networks during and between epileptic seizures using pediatric EEG recordings. By constructing Visibility Graphs (VG) from EEG signals and applying network analysis methods, we aim to identify how network structure changes between normal brain activity (interictal) and seizure (ictal) periods.
 We analyze an EEG dataset with epileptic seizures from the CHB-MIT database. The input of our data pipeline consists of electrode recordings from one patient (CHB01), representing the electrical activity of brain states 15 seconds before and during a seizure as a time series. We construct a Visibility Graph directly from the raw EEG time series — each timepoint becomes a node, and two timepoints are connected if no taller amplitude value blocks the line of sight between them. This graph-based representation captures the regularity and periodicity of the EEG signal without requiring correlation computation. We analyze how the VG structure evolves second by second across 30 windows, enabling us to identify seizure onset and quantify the transition from complex irregular brain activity to rhythmic ictal activity.
 ---
 ### 1) Network Loading & Data Management (Ji-one Kim, Marina Köhli): 
 
-We use a dataset from the CHB-MIT Scalp EEG Database, which contains EEG recordings from 5 male (ages 3–22) and 17 female (ages 1.5–19) pediatric patients with intractable seizures. Recordings consist of 23 EEG channels sampled at 256 Hz with 16-bit resolution. Data is available in EDF (European Data Format). For feasibility, we focus on one patient (CHB01), analyzing a 30-second segment centered on a seizure onset (15s pre-ictal + 15s ictal).
-Rather than computing pairwise correlations between electrodes, we construct a Visibility Graph (VG) independently for each electrode's time series. For each 1-second window (256 timepoints at 256 Hz), two timepoints tit_i
-ti​ and tjt_j
-tj​ are connected by an edge if and only if:
-x(tk)<x(ti)+x(tj)−x(ti)tj−ti(tk−ti)∀tk∈(ti,tj)x(t_k) < x(t_i) + \frac{x(t_j) - x(t_i)}{t_j - t_i}(t_k - t_i) \quad \forall t_k \in (t_i, t_j)x(tk​)<x(ti​)+tj​−ti​x(tj​)−x(ti​)​(tk​−ti​)∀tk​∈(ti​,tj​)
-This means no intermediate value blocks the line of sight between them. The resulting graph encodes the temporal structure and regularity of the EEG signal: periodic signals (typical of seizures) produce many long-range visibility connections and high node degree, while complex irregular signals (typical of normal brain activity) produce sparse, short-range connections.
-The pre-computed adjacency matrix is provided as a sparse matrix of shape 176,640 × 176,640, encoding all VG connections across 23 electrodes × 7,680 timepoints. Node index kk
-k maps to electrode ⌊k/7680⌋\lfloor k / 7680 \rfloor
-⌊k/7680⌋ at timepoint k mod 7680k \bmod 7680
-kmod7680.
+We use data from the CHB-MIT Scalp EEG Database, which includes EEG recordings from 5 male patients (ages 3–22) and 17 female patients (ages 1.5–19) with intractable seizures. The recordings contain 23 EEG channels sampled at 256 Hz with 16-bit resolution and are provided in EDF (European Data Format). For this project, we focus on one patient (CHB01) and analyze a 30-second segment centered on seizure onset, consisting of 15 seconds of pre-ictal activity and 15 seconds of ictal activity.
+
+Instead of measuring pairwise correlations between electrodes, we build a Visibility Graph (VG) separately for each electrode’s EEG time series. In each 1-second window, sampled at 256 timepoints, two timepoints are connected if they can “see” each other without any intermediate signal value blocking the line between them. In this way, the graph captures the temporal structure of the signal. More regular and seizure-like signals tend to form denser graphs with more long-range connections and higher node degree, while irregular normal EEG activity tends to produce sparser graphs with mostly short-range connections.
+
+The precomputed adjacency matrix is stored as a sparse matrix of size 176,640 × 176,640, representing all VG connections across 23 electrodes and 7,680 timepoints. Each node index corresponds to both an electrode and a specific timepoint within the full recording.
 
 ### 2) Network Exploration & Analytics (Simon Krummenacher, Antonia Spörk): 
 
