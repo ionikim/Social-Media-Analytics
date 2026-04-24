@@ -25,6 +25,8 @@ FS           = 256
 WINDOW_SEC   = 5
 STEP_SEC     = 1
 ONSET_SEC    = 16      # seizure onset offset within this file
+K_CLUSTERS   = 4      # dendrogram cut depth for benchmark metrics
+THRESHOLD    = 0.3    # correlation threshold for adjacency graph (benchmark)
  
 CHANNEL_NAMES = [
     "FP1-F7", "F7-T7",  "T7-P7",  "P7-O1",
@@ -56,7 +58,8 @@ t_centers_sec  = [(t + window_samples / 2) / FS for t in t_starts]
 print(f"  Windows: {len(t_starts)}  ({WINDOW_SEC}s window, {STEP_SEC}s step)")
  
 print("Precomputing correlation matrices ...")
-all_corrs = []
+all_corrs     = []
+all_temporals = []
 for t_start in t_starts:
     ch_temporal = np.zeros((N_CHANNELS, window_samples))
     for ch in range(N_CHANNELS):
@@ -68,9 +71,11 @@ for t_start in t_starts:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         corr = np.corrcoef(ch_temporal)
+    all_temporals.append(ch_temporal.copy())
     all_corrs.append(np.nan_to_num(corr, nan=0.0))
- 
-all_corrs = np.array(all_corrs)   # (n_windows, 23, 23)
+
+all_corrs     = np.array(all_corrs)      # (n_windows, 23, 23)
+all_temporals = np.array(all_temporals)  # (n_windows, 23, window_samples)
 idx       = np.triu_indices(N_CHANNELS, k=1)
 mean_corr = [c[idx].mean() for c in all_corrs]
  
@@ -257,4 +262,185 @@ print("  plot1_synchrony.png")
 print("  plot2_interictal_vs_ictal.png")
 print("  plot3_animation.gif")
 print("  plot4_dendrogram_grid.png")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  BENCHMARK METRICS  (all from scratch — numpy + stdlib only)
+# ══════════════════════════════════════════════════════════════════════════════
+import time, tracemalloc
+
+CHANNEL_REGIONS = {
+    "FP1-F7":    "frontal",   "F7-T7":    "frontal",
+    "T7-P7":     "temporal",  "P7-O1":    "parietal",
+    "FP1-F3":    "frontal",   "F3-C3":    "central",
+    "C3-P3":     "central",   "P3-O1":    "parietal",
+    "FP2-F4":    "frontal",   "F4-C4":    "central",
+    "C4-P4":     "central",   "P4-O2":    "parietal",
+    "FP2-F8":    "frontal",   "F8-T8":    "frontal",
+    "T8-P8":     "temporal",  "P8-O2":    "parietal",
+    "FZ-CZ":     "central",   "CZ-PZ":    "central",
+    "P7-T7":     "temporal",  "T7-FT9":   "temporal",
+    "FT9-FT10":  "temporal",  "FT10-T8":  "temporal",
+    "T8-P8-1":   "temporal",
+}
+
+
+def _iced(A, labels):
+    """Intra-cluster edge density: actual edges / possible edges within each cluster."""
+    densities = []
+    for c in np.unique(labels):
+        idx = np.where(labels == c)[0]
+        n_c = len(idx)
+        if n_c < 2:
+            continue
+        sub      = A[np.ix_(idx, idx)]
+        actual   = float(np.triu(sub, 1).sum())
+        possible = n_c * (n_c - 1) / 2
+        densities.append(actual / possible)
+    return float(np.mean(densities)) if densities else 0.0
+
+
+def _ratio(A, labels):
+    """Inter / intra edge ratio."""
+    intra, inter = 0.0, 0.0
+    n = len(labels)
+    for i in range(n):
+        for j in range(i + 1, n):
+            w = A[i, j]
+            if w > 0:
+                if labels[i] == labels[j]:
+                    intra += w
+                else:
+                    inter += w
+    return inter / intra if intra > 0 else np.inf
+
+
+def _cond(A, labels):
+    """Mean conductance: cut / vol per cluster."""
+    vals = []
+    for c in np.unique(labels):
+        rows = np.where(labels == c)[0]
+        cols = np.where(labels != c)[0]
+        cut  = float(A[np.ix_(rows, cols)].sum())
+        vol  = float(A[rows, :].sum())
+        vals.append(cut / vol if vol > 0 else 0.0)
+    return float(np.mean(vals))
+
+
+def _cc(A, labels):
+    """Mean local clustering coefficient within each cluster."""
+    coeffs = []
+    for c in np.unique(labels):
+        idx = np.where(labels == c)[0]
+        if len(idx) < 3:
+            continue
+        sub = (A[np.ix_(idx, idx)] > 0).astype(float)
+        np.fill_diagonal(sub, 0.0)
+        for i in range(len(idx)):
+            nbrs = np.where(sub[i] > 0)[0]
+            ki   = len(nbrs)
+            if ki < 2:
+                continue
+            tri = sum(sub[nbrs[u], nbrs[v]]
+                      for u in range(ki) for v in range(u + 1, ki))
+            coeffs.append(float(tri) / (ki * (ki - 1) / 2))
+    return float(np.mean(coeffs)) if coeffs else 0.0
+
+
+def _bandpower(sig, fs, lo=1.0, hi=40.0):
+    fft   = np.fft.rfft(sig)
+    freqs = np.fft.rfftfreq(len(sig), d=1.0 / fs)
+    psd   = (np.abs(fft) ** 2) / len(sig)
+    idx   = (freqs >= lo) & (freqs <= hi)
+    return float(psd[idx].mean()) if idx.sum() > 0 else 0.0
+
+
+def _bpv(ch_temporal, labels, fs):
+    """Intra-community bandpower variance."""
+    bp = np.array([_bandpower(ch_temporal[ch], fs) for ch in range(len(ch_temporal))])
+    vars_ = [float(bp[np.where(labels == c)[0]].var())
+             for c in np.unique(labels) if (labels == c).sum() >= 2]
+    return float(np.mean(vars_)) if vars_ else 0.0
+
+
+def _src(labels, ch_names, regions):
+    """Spatial region consistency: majority region fraction per cluster."""
+    regs  = np.array([regions.get(ch, "unknown") for ch in ch_names])
+    props = []
+    for c in np.unique(labels):
+        idx = np.where(labels == c)[0]
+        if len(idx) == 0:
+            continue
+        _, cts = np.unique(regs[idx], return_counts=True)
+        props.append(cts.max() / len(idx))
+    return float(np.mean(props)) if props else 0.0
+
+
+def _fmt(v):
+    return "   inf  " if np.isinf(v) else f"{v:8.4f}"
+
+
+def _pavg(lst, idx):
+    return float(np.mean([lst[i] for i in idx]))
+
+
+print("\nComputing benchmark metrics ...")
+
+# ── flat labels per window: cut Ward dendrogram at K_CLUSTERS ───────────────
+all_flat_labels = []
+for corr in all_corrs:
+    d_w  = squareform(1.0 - np.clip(corr, -1, 1), checks=False)
+    l_w  = sch.linkage(d_w, method="ward")
+    labs = sch.fcluster(l_w, K_CLUSTERS, criterion="maxclust") - 1  # 0-indexed
+    all_flat_labels.append(labs)
+all_flat_labels = np.array(all_flat_labels)
+
+# ── structural quality per window ───────────────────────────────────────────
+iced_l, ratio_l, cond_l, cc_l, bpv_l, src_l = [], [], [], [], [], []
+for i, (corr, labs) in enumerate(zip(all_corrs, all_flat_labels)):
+    A_b = corr.copy()
+    A_b[A_b < THRESHOLD] = 0.0
+    A_b[A_b < 0]         = 0.0
+    np.fill_diagonal(A_b, 0.0)
+    iced_l.append(_iced(A_b, labs))
+    ratio_l.append(_ratio(A_b, labs))
+    cond_l.append(_cond(A_b, labs))
+    cc_l.append(_cc(A_b, labs))
+    bpv_l.append(_bpv(all_temporals[i], labs, FS))
+    src_l.append(_src(labs, CHANNEL_NAMES, CHANNEL_REGIONS))
+
+# ── runtime & peak memory ───────────────────────────────────────────────────
+tracemalloc.start()
+t0 = time.perf_counter()
+for corr in all_corrs:
+    d_w = squareform(1.0 - np.clip(corr, -1, 1), checks=False)
+    l_w = sch.linkage(d_w, method="ward")
+    sch.fcluster(l_w, K_CLUSTERS, criterion="maxclust")
+t1 = time.perf_counter()
+_, peak_mem = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+
+# ── print summary ───────────────────────────────────────────────────────────
+W = 34
+print(f"\n{'═' * 67}")
+print(f"  BENCHMARK SUMMARY — Ward (Hierarchical)  ·  CHB-01 chb01_03")
+print(f"{'═' * 67}")
+print(f"  {'Metric':<{W}} {'Interictal':>10}  {'Ictal':>10}")
+print(f"  {'─' * 62}")
+for name, lst in [("Intra-Cluster Edge Density",   iced_l),
+                   ("Inter / Intra Edge Ratio",      ratio_l),
+                   ("Conductance",                   cond_l),
+                   ("Avg Clustering Coeff (intra)",  cc_l)]:
+    print(f"  {name:<{W}} {_fmt(_pavg(lst, interictal_idx))}  {_fmt(_pavg(lst, ictal_idx))}")
+print(f"  {'─' * 62}")
+print(f"  {'ARI between runs':<{W}}   1.0000 ± 0.0000  (deterministic)")
+print(f"  {'NMI between runs':<{W}}   1.0000 ± 0.0000  (deterministic)")
+print(f"  {'─' * 62}")
+print(f"  {'Runtime (all windows)':<{W}} {t1 - t0:8.2f} s")
+print(f"  {'Peak Memory Usage':<{W}} {peak_mem / 1e6:8.1f} MB")
+print(f"  {'─' * 62}")
+for name, lst in [("Intra-Community Bandpower Var",  bpv_l),
+                   ("Spatial Region Consistency",     src_l)]:
+    print(f"  {name:<{W}} {_fmt(_pavg(lst, interictal_idx))}  {_fmt(_pavg(lst, ictal_idx))}")
+print(f"{'═' * 67}\n")
  
