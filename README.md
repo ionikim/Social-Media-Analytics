@@ -73,7 +73,7 @@ This project analyzes the temporal evolution of brain connectivity networks acro
 
 **Visualization.** Network structure was visualized using Gephi (static MHVG and OPTN graphs), Cosmograph (frequency-weighted animated and static views across all 23 electrodes), HTML-based interactive circular visibility graphs, and three interactive Streamlit apps showing the sliding window correlation network, hierarchical clustering, and spectral clustering live as the seizure unfolds.
 
-**Key finding.** Laplacian spectral clustering produced the clearest seizure signal: the eigengap peaked sharply just before seizure onset and collapsed during the ictal phase, indicating a brief period of unusually strong cluster separation immediately preceding the seizure.
+Laplacian spectral clustering produced the clearest seizure signal: the eigengap peaked sharply just before seizure onset and collapsed during the ictal phase, indicating a brief period of unusually strong cluster separation immediately preceding the seizure.
 ---
 ### 1) Network Loading & Data Management (Ji-one Kim, Marina Köhli): 
 
