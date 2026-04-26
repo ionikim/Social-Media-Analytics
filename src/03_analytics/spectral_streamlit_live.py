@@ -4,6 +4,7 @@ Laplacian Spectral Clustering — Streamlit Live Demo
 Run with:  streamlit run spectral_streamlit_live.py
 """
 
+from pathlib import Path
 import time
 import warnings
 import numpy as np
@@ -19,7 +20,11 @@ st.set_page_config(
 )
 
 # ── constants ──────────────────────────────────────────────────────────────
-NPZ_PATH     = '/Users/antoniaspoerk/Desktop/Digital Neuroscience /Social Media Analytics/epilepsy_pediatrics_EEG/data/graphs/adjacency_sparse/inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz'
+NPZ_PATH     = (
+    Path(__file__).resolve().parents[2]
+    / "data" / "graphs" / "adjacency_sparse"
+    / "inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz"
+)
 N_CHANNELS   = 23
 N_TIMEPOINTS = 7680
 FS           = 256

@@ -8,7 +8,7 @@ from pathlib import Path
 # ===============================
 # 1. Pfade robust definieren
 # ===============================
-BASE_DIR = Path(__file__).resolve().parents[1]
+BASE_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = BASE_DIR / "data" / "graphs" / "adjacency_sparse"
 
 # ===============================

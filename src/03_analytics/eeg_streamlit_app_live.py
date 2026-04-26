@@ -4,6 +4,7 @@ EEG Network Transition — Streamlit Live Demo (auto-play)
 Run with:  streamlit run eeg_streamlit_app.py
 """
  
+from pathlib import Path
 import time
 import warnings
 import numpy as np
@@ -12,15 +13,19 @@ import scipy.cluster.hierarchy as sch
 from scipy.spatial.distance import squareform
 import matplotlib.pyplot as plt
 import streamlit as st
- 
+
 st.set_page_config(
     page_title="EEG Network Transition · CHB-01",
     page_icon="🧠",
     layout="wide"
 )
- 
+
 # ── constants ──────────────────────────────────────────────────────────────
-NPZ_PATH      = '/Users/antoniaspoerk/Desktop/Digital Neuroscience /Social Media Analytics/epilepsy_pediatrics_EEG/data/graphs/adjacency_sparse/inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz'
+NPZ_PATH      = (
+    Path(__file__).resolve().parents[2]
+    / "data" / "graphs" / "adjacency_sparse"
+    / "inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz"
+)
 N_CHANNELS    = 23
 N_TIMEPOINTS  = 7680
 FS            = 256

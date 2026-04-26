@@ -1,13 +1,18 @@
 """
 Stream-Moore Benchmark Metrics  (all from scratch — numpy + stdlib only)
 """
+from pathlib import Path
 import numpy as np
 import scipy.sparse as sp
 from collections import defaultdict
 import time, tracemalloc
 
 # ── configuration ──────────────────────────────────────────────────────────
-NPZ_PATH     = '/Users/antoniaspoerk/Desktop/Digital Neuroscience /Social Media Analytics/epilepsy_pediatrics_EEG/data/graphs/adjacency_sparse/inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz'
+NPZ_PATH     = (
+    Path(__file__).resolve().parents[2]
+    / "data" / "graphs" / "adjacency_sparse"
+    / "inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz"
+)
 N_CHANNELS   = 23
 N_TIMEPOINTS = 7680
 FS           = 256

@@ -20,5 +20,8 @@ plotly
 # ── Web dashboard ──────────────────────────────────────────────────────────────
 streamlit
 
+# ── Image / animation ──────────────────────────────────────────────────────────
+pillow                # required by matplotlib for saving GIF animations
+
 # ── Google Colab / Drive (notebook helpers) ────────────────────────────────────
 google-colab; sys_platform == "linux"   # only available in Colab notebooks

@@ -5,7 +5,8 @@ Run with:  streamlit run eeg_streamlit_app.py
  
 Place the .npz file in the same directory.
 """
- 
+
+from pathlib import Path
 import warnings
 import numpy as np
 import scipy.sparse as sp
@@ -14,16 +15,20 @@ from scipy.spatial.distance import squareform
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import streamlit as st
- 
+
 # ── page config ────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="EEG Network Transition · CHB-01",
     page_icon="🧠",
     layout="wide"
 )
- 
+
 # ── constants ──────────────────────────────────────────────────────────────
-NPZ_PATH      = '/Users/antoniaspoerk/Desktop/Digital Neuroscience /Social Media Analytics/epilepsy_pediatrics_EEG/data/graphs/adjacency_sparse/inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz'
+NPZ_PATH      = (
+    Path(__file__).resolve().parents[2]
+    / "data" / "graphs" / "adjacency_sparse"
+    / "inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz"
+)
 N_CHANNELS    = 23
 N_TIMEPOINTS  = 7680
 FS            = 256
