@@ -16,14 +16,14 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import streamlit as st
 
-# ── page config ────────────────────────────────────────────────────────────
+# page config
 st.set_page_config(
     page_title="EEG Network Transition · CHB-01",
     page_icon="🧠",
     layout="wide"
 )
 
-# ── constants ──────────────────────────────────────────────────────────────
+# constants
 NPZ_PATH      = (
     Path(__file__).resolve().parents[2]
     / "data" / "graphs" / "adjacency_sparse"
@@ -53,7 +53,7 @@ INTERICTAL_CLR = "#7c6af7"
 ICTAL_CLR      = "#f7936a"
  
  
-# ── cached data loading ────────────────────────────────────────────────────
+# cached data loading
 @st.cache_resource(show_spinner="Loading adjacency matrix and precomputing windows…")
 def load_and_precompute(window_sec, step_sec):
     mat = sp.load_npz(NPZ_PATH)
@@ -94,7 +94,7 @@ def load_and_precompute(window_sec, step_sec):
     return all_corrs, mean_corr, t_starts, t_centers_sec, order
  
  
-# ── sidebar controls ───────────────────────────────────────────────────────
+# sidebar controls
 st.sidebar.title("🧠 EEG Network Demo")
 st.sidebar.markdown(
     "**Dataset:** CHB-MIT · chb01_03  \n"
@@ -113,7 +113,7 @@ st.sidebar.divider()
 show_dendro = st.sidebar.checkbox("Show dendrogram", value=False)
  
  
-# ── load data ──────────────────────────────────────────────────────────────
+# load data
 all_corrs, mean_corr, t_starts, t_centers_sec, order = load_and_precompute(
     window_sec, step_sec
 )
@@ -124,7 +124,7 @@ def reorder(m):
     return m[np.ix_(order, order)]
  
  
-# ── header ─────────────────────────────────────────────────────────────────
+# header
 st.title("EEG Network Transition: Interictal → Ictal")
 st.markdown(
     "Slide the window below to watch the functional connectivity network "
@@ -132,7 +132,7 @@ st.markdown(
     "The **red dashed line** marks the annotated seizure onset at **+16 s**."
 )
  
-# ── window slider ──────────────────────────────────────────────────────────
+# window slider
 frame = st.slider(
     "Current window",
     min_value=0,
@@ -154,7 +154,7 @@ st.markdown(
     unsafe_allow_html=True
 )
  
-# ── main plots ─────────────────────────────────────────────────────────────
+# main plots
 col1, col2 = st.columns([1.6, 1], gap="large")
  
 # heatmap
@@ -211,7 +211,7 @@ with col2:
     st.pyplot(fig, use_container_width=True)
     plt.close(fig)
  
-# ── optional dendrogram ────────────────────────────────────────────────────
+# optional dendrogram
 if show_dendro:
     st.divider()
     st.subheader("Dendrogram for current window")
@@ -248,7 +248,7 @@ if show_dendro:
     st.pyplot(fig, use_container_width=True)
     plt.close(fig)
  
-# ── footer ──────────────────────────────────────────────────────────────────
+# footer
 st.divider()
 st.caption(
     "CHB-MIT Scalp EEG Database · chb01_03.edf · "

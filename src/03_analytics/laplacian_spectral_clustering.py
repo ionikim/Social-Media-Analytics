@@ -26,12 +26,12 @@ import scipy.sparse as sp
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-# ── project root (works on any machine, regardless of clone location) ───────
+# project root (works on any machine, regardless of clone location)
 # This file lives at <project_root>/src/03_analytics/
 _HERE = Path(__file__).resolve().parent
 BASE_DIR = _HERE.parents[1]          # go up: 03_analytics → src → project root
 
-# ── configuration ──────────────────────────────────────────────────────────
+# configuration
 NPZ_PATH = (
     BASE_DIR
     / "data" / "graphs" / "adjacency_sparse"
@@ -66,9 +66,7 @@ ICTAL_CLR      = "#f7936a"
 CLUSTER_COLORS = ["#7c6af7", "#f7936a", "#5ecfb1", "#e05c97", "#f5d547"]
  
  
-# ══════════════════════════════════════════════════════════════════════════════
-#  STEP 1 — load & precompute correlation matrices (same as before)
-# ══════════════════════════════════════════════════════════════════════════════
+# STEP 1 — load & precompute correlation matrices (same as before)
 print("Loading adjacency matrix ...")
 mat = sp.load_npz(NPZ_PATH)
 print(f"  Shape: {mat.shape}  |  Non-zeros: {mat.nnz:,}")
@@ -101,9 +99,7 @@ all_temporals = np.array(all_temporals)  # (n_windows, 23, window_samples)
 print("Done.\n")
  
  
-# ══════════════════════════════════════════════════════════════════════════════
-#  CORE FUNCTIONS — implemented from scratch in numpy
-# ══════════════════════════════════════════════════════════════════════════════
+# CORE FUNCTIONS — implemented from scratch in numpy
  
 def build_adjacency(corr_matrix, threshold):
     """
@@ -236,7 +232,7 @@ def kmeans_scratch(X, k, n_init=10, max_iter=300, tol=1e-6, seed=42):
  
     for init_run in range(n_init):
  
-        # ── initialise centroids (k-means++ style) ──────────────────────────
+        # initialise centroids (k-means++ style)
         # Pick first centroid randomly, then pick each subsequent centroid
         # with probability proportional to distance from nearest existing centroid
         centroids = []
@@ -255,7 +251,7 @@ def kmeans_scratch(X, k, n_init=10, max_iter=300, tol=1e-6, seed=42):
  
         centroids = np.array(centroids)   # (k, d)
  
-        # ── iterate ─────────────────────────────────────────────────────────
+        # iterate
         labels = np.zeros(len(X), dtype=int)
  
         for iteration in range(max_iter):
@@ -330,9 +326,7 @@ def spectral_clustering(corr_matrix, k, threshold):
     return labels, eigenvalues, embedding
  
  
-# ══════════════════════════════════════════════════════════════════════════════
-#  STEP 2 — run spectral clustering on every window
-# ══════════════════════════════════════════════════════════════════════════════
+# STEP 2 — run spectral clustering on every window
 print(f"Running spectral clustering (k={K_CLUSTERS}, threshold={THRESHOLD}) ...")
 all_labels      = []   # cluster assignments per window
 all_eigenvalues = []   # eigenvalue spectra per window
@@ -349,10 +343,8 @@ all_eigenvalues = np.array(all_eigenvalues)  # (n_windows, N_CHANNELS)
 print("Done.\n")
  
  
-# ══════════════════════════════════════════════════════════════════════════════
-#  STEP 3 — align cluster labels across windows
-#  (k-means labels are arbitrary per run — align greedily to window 0)
-# ══════════════════════════════════════════════════════════════════════════════
+# STEP 3 — align cluster labels across windows
+# (k-means labels are arbitrary per run — align greedily to window 0)
 def align_labels(ref_labels, new_labels, k):
     """
     Permute new_labels so they best match ref_labels.
@@ -383,9 +375,7 @@ for i in range(1, n_windows):
 aligned_labels = np.array(aligned_labels)
  
  
-# ══════════════════════════════════════════════════════════════════════════════
-#  PLOT 1 — cluster assignments over time (raster / carpet plot)
-# ══════════════════════════════════════════════════════════════════════════════
+# PLOT 1 — cluster assignments over time (raster / carpet plot)
 print("Saving plot 1: cluster assignment raster ...")
 fig, ax = plt.subplots(figsize=(13, 5), facecolor=BG)
 ax.set_facecolor(PANEL_BG)
@@ -437,11 +427,9 @@ plt.close(fig)
 print("  Saved -> spectral_plot1_raster.png")
  
  
-# ══════════════════════════════════════════════════════════════════════════════
-#  PLOT 2 — eigengap over time
-#  The eigengap (gap between k-th and (k+1)-th eigenvalue) tells you
-#  how well-separated the clusters are. A large gap = strong cluster structure.
-# ══════════════════════════════════════════════════════════════════════════════
+# PLOT 2 — eigengap over time
+# The eigengap (gap between k-th and (k+1)-th eigenvalue) tells you
+# how well-separated the clusters are. A large gap = strong cluster structure.
 print("Saving plot 2: eigengap over time ...")
 eigengap = all_eigenvalues[:, K_CLUSTERS] - all_eigenvalues[:, K_CLUSTERS - 1]
  
@@ -474,9 +462,7 @@ plt.close(fig)
 print("  Saved -> spectral_plot2_eigengap.png")
  
  
-# ══════════════════════════════════════════════════════════════════════════════
-#  PLOT 3 — interictal vs ictal cluster maps (which channels in which cluster)
-# ══════════════════════════════════════════════════════════════════════════════
+# PLOT 3 — interictal vs ictal cluster maps (which channels in which cluster)
 print("Saving plot 3: interictal vs ictal cluster comparison ...")
  
 interictal_idx  = [i for i, t in enumerate(t_centers_sec) if t <= ONSET_SEC]
@@ -529,9 +515,7 @@ plt.close(fig)
 print("  Saved -> spectral_plot3_cluster_map.png")
  
  
-# ══════════════════════════════════════════════════════════════════════════════
-#  PLOT 4 — eigenvalue spectrum for one interictal vs one ictal window
-# ══════════════════════════════════════════════════════════════════════════════
+# PLOT 4 — eigenvalue spectrum for one interictal vs one ictal window
 print("Saving plot 4: eigenvalue spectrum comparison ...")
  
 mid_inter = interictal_idx[len(interictal_idx) // 2]
@@ -578,10 +562,7 @@ print("  spectral_plot2_eigengap.png      — cluster separation strength over t
 print("  spectral_plot3_cluster_map.png   — interictal vs ictal cluster membership")
 print("  spectral_plot4_eigenspectrum.png — Laplacian eigenvalue spectrum")
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  BENCHMARK METRICS  (all from scratch — numpy + stdlib only)
-# ══════════════════════════════════════════════════════════════════════════════
+# BENCHMARK METRICS  (all from scratch — numpy + stdlib only)
 import time, tracemalloc
 
 CHANNEL_REGIONS = {
@@ -599,7 +580,6 @@ CHANNEL_REGIONS = {
     "T8-P8-1":   "temporal",
 }
 
-
 def _iced(A, labels):
     """Intra-cluster edge density: actual edges / possible edges within each cluster."""
     densities = []
@@ -613,7 +593,6 @@ def _iced(A, labels):
         possible = n_c * (n_c - 1) / 2
         densities.append(actual / possible)
     return float(np.mean(densities)) if densities else 0.0
-
 
 def _ratio(A, labels):
     """Inter / intra edge ratio."""
@@ -629,7 +608,6 @@ def _ratio(A, labels):
                     inter += w
     return inter / intra if intra > 0 else np.inf
 
-
 def _cond(A, labels):
     """Mean conductance: cut / vol per cluster."""
     vals = []
@@ -640,7 +618,6 @@ def _cond(A, labels):
         vol  = float(A[rows, :].sum())
         vals.append(cut / vol if vol > 0 else 0.0)
     return float(np.mean(vals))
-
 
 def _cc(A, labels):
     """Mean local clustering coefficient within each cluster."""
@@ -661,10 +638,8 @@ def _cc(A, labels):
             coeffs.append(float(tri) / (ki * (ki - 1) / 2))
     return float(np.mean(coeffs)) if coeffs else 0.0
 
-
 def _c2(n):
     return n * (n - 1) // 2
-
 
 def _ari(a, b):
     """Adjusted Rand Index from contingency table."""
@@ -682,7 +657,6 @@ def _ari(a, b):
     exp = sa * sb / tot if tot > 0 else 0
     mx  = (sa + sb) / 2
     return float((sc - exp) / (mx - exp)) if (mx - exp) > 0 else 1.0
-
 
 def _nmi(a, b):
     """Normalized Mutual Information."""
@@ -702,7 +676,6 @@ def _nmi(a, b):
     hb = -sum(p * np.log(p) for p in pb if p > 0)
     return float(2 * mi / (ha + hb)) if (ha + hb) > 0 else 1.0
 
-
 def _bandpower(sig, fs, lo=1.0, hi=40.0):
     fft   = np.fft.rfft(sig)
     freqs = np.fft.rfftfreq(len(sig), d=1.0 / fs)
@@ -710,14 +683,12 @@ def _bandpower(sig, fs, lo=1.0, hi=40.0):
     idx   = (freqs >= lo) & (freqs <= hi)
     return float(psd[idx].mean()) if idx.sum() > 0 else 0.0
 
-
 def _bpv(ch_temporal, labels, fs):
     """Intra-community bandpower variance."""
     bp = np.array([_bandpower(ch_temporal[ch], fs) for ch in range(len(ch_temporal))])
     vars_ = [float(bp[np.where(labels == c)[0]].var())
              for c in np.unique(labels) if (labels == c).sum() >= 2]
     return float(np.mean(vars_)) if vars_ else 0.0
-
 
 def _src(labels, ch_names, regions):
     """Spatial region consistency: majority region fraction per cluster."""
@@ -731,18 +702,15 @@ def _src(labels, ch_names, regions):
         props.append(cts.max() / len(idx))
     return float(np.mean(props)) if props else 0.0
 
-
 def _fmt(v):
     return "   inf  " if np.isinf(v) else f"{v:8.4f}"
-
 
 def _pavg(lst, idx):
     return float(np.mean([lst[i] for i in idx]))
 
-
 print("\nComputing benchmark metrics ...")
 
-# ── structural quality per window ───────────────────────────────────────────
+# structural quality per window
 iced_l, ratio_l, cond_l, cc_l, bpv_l, src_l = [], [], [], [], [], []
 for i, (corr, labs) in enumerate(zip(all_corrs, aligned_labels)):
     A_b = build_adjacency(corr, THRESHOLD)
@@ -753,14 +721,14 @@ for i, (corr, labs) in enumerate(zip(all_corrs, aligned_labels)):
     bpv_l.append(_bpv(all_temporals[i], labs, FS))
     src_l.append(_src(labs, CHANNEL_NAMES, CHANNEL_REGIONS))
 
-# ── stability: 5 independent runs on a single interictal window ─────────────
+# stability: 5 independent runs on a single interictal window
 test_win = interictal_idx[len(interictal_idx) // 2]
 run_labs = [spectral_clustering(all_corrs[test_win], K_CLUSTERS, THRESHOLD)[0]
             for _ in range(5)]
 ari_vals = [_ari(run_labs[0], r) for r in run_labs[1:]]
 nmi_vals = [_nmi(run_labs[0], r) for r in run_labs[1:]]
 
-# ── runtime & peak memory ───────────────────────────────────────────────────
+# runtime & peak memory
 tracemalloc.start()
 t0 = time.perf_counter()
 for corr in all_corrs:
@@ -769,27 +737,27 @@ t1 = time.perf_counter()
 _, peak_mem = tracemalloc.get_traced_memory()
 tracemalloc.stop()
 
-# ── print summary ───────────────────────────────────────────────────────────
+# print summary
 W = 34
-print(f"\n{'═' * 67}")
+print(f"\n{'=' * 67}")
 print(f"  BENCHMARK SUMMARY — Spectral Laplacian  ·  CHB-01 chb01_03")
-print(f"{'═' * 67}")
+print(f"{'=' * 67}")
 print(f"  {'Metric':<{W}} {'Interictal':>10}  {'Ictal':>10}")
-print(f"  {'─' * 62}")
+print(f"  {'-' * 62}")
 for name, lst in [("Intra-Cluster Edge Density",   iced_l),
                    ("Inter / Intra Edge Ratio",      ratio_l),
                    ("Conductance",                   cond_l),
                    ("Avg Clustering Coeff (intra)",  cc_l)]:
     print(f"  {name:<{W}} {_fmt(_pavg(lst, interictal_idx))}  {_fmt(_pavg(lst, ictal_idx))}")
-print(f"  {'─' * 62}")
+print(f"  {'-' * 62}")
 print(f"  {'ARI between runs':<{W}} {np.mean(ari_vals):8.4f} ± {np.std(ari_vals):.4f}")
 print(f"  {'NMI between runs':<{W}} {np.mean(nmi_vals):8.4f} ± {np.std(nmi_vals):.4f}")
-print(f"  {'─' * 62}")
+print(f"  {'-' * 62}")
 print(f"  {'Runtime (all windows)':<{W}} {t1 - t0:8.2f} s")
 print(f"  {'Peak Memory Usage':<{W}} {peak_mem / 1e6:8.1f} MB")
-print(f"  {'─' * 62}")
+print(f"  {'-' * 62}")
 for name, lst in [("Intra-Community Bandpower Var",  bpv_l),
                    ("Spatial Region Consistency",     src_l)]:
     print(f"  {name:<{W}} {_fmt(_pavg(lst, interictal_idx))}  {_fmt(_pavg(lst, ictal_idx))}")
-print(f"{'═' * 67}\n")
+print(f"{'=' * 67}\n")
  

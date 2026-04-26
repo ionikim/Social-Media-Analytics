@@ -7,7 +7,7 @@ import scipy.sparse as sp
 from collections import defaultdict
 import time, tracemalloc
 
-# ── configuration ──────────────────────────────────────────────────────────
+# configuration
 NPZ_PATH     = (
     Path(__file__).resolve().parents[2]
     / "data" / "graphs" / "adjacency_sparse"
@@ -44,10 +44,7 @@ CHANNEL_REGIONS = {
     "T8-P8-1": "temporal",
 }
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  STREAM-MOORE ALGORITHM  (copied from notebook)
-# ══════════════════════════════════════════════════════════════════════════════
+# STREAM-MOORE ALGORITHM  (copied from notebook)
 
 class UnionFind:
     def __init__(self, n):
@@ -75,7 +72,6 @@ class UnionFind:
         if self.rank[rx] == self.rank[ry]:
             self.rank[rx] += 1
         return True
-
 
 class IncrementalModularity:
     def __init__(self, degrees, m):
@@ -127,7 +123,6 @@ class IncrementalModularity:
             Q   += (e_cc / self.m) - (a_r / self.two_m) ** 2
         return Q
 
-
 def stream_moore(adj, verbose=False):
     adj = adj.tocsr().astype(np.float64)
     n   = adj.shape[0]
@@ -160,16 +155,13 @@ def stream_moore(adj, verbose=False):
     labels = np.array([unique_roots[l] for l in labels])
     return labels
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  LOAD GRAPH & RUN ALGORITHM
-# ══════════════════════════════════════════════════════════════════════════════
+# LOAD GRAPH & RUN ALGORITHM
 print("Loading adjacency matrix ...")
 adj = sp.load_npz(NPZ_PATH)
 n   = adj.shape[0]
 print(f"  {n:,} nodes  |  {adj.nnz // 2:,} edges")
 
-# ── timed run for runtime metric ────────────────────────────────────────────
+# timed run for runtime metric
 tracemalloc.start()
 t0     = time.perf_counter()
 labels = stream_moore(adj, verbose=False)
@@ -181,11 +173,8 @@ runtime = t1 - t0
 unique_comms, comm_sizes = np.unique(labels, return_counts=True)
 print(f"  Communities: {len(unique_comms):,}  |  runtime: {runtime:.2f}s")
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  PHASE SPLIT
-#  Node i → timepoint = i % N_TIMEPOINTS → interictal if < ONSET_SAMPLE
-# ══════════════════════════════════════════════════════════════════════════════
+# PHASE SPLIT
+# Node i → timepoint = i % N_TIMEPOINTS → interictal if < ONSET_SAMPLE
 node_timepoints = np.arange(n) % N_TIMEPOINTS
 node_is_inter   = node_timepoints < ONSET_SAMPLE   # bool array
 
@@ -201,10 +190,7 @@ for c in unique_comms:
 print(f"  Interictal communities: {len(inter_comm_idx):,}  |  "
       f"Ictal communities: {len(ictal_comm_idx):,}")
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  BENCHMARK METRIC FUNCTIONS
-# ══════════════════════════════════════════════════════════════════════════════
+# BENCHMARK METRIC FUNCTIONS
 
 def structural_metrics(adj_csr, comm_indices):
     """ICED, conductance, avg clustering coeff for a list of communities."""
@@ -237,7 +223,6 @@ def structural_metrics(adj_csr, comm_indices):
             float(np.mean(cond_l)) if cond_l else 0.0,
             float(np.mean(cc_l))   if cc_l   else 0.0)
 
-
 def inter_intra_ratio(adj, labels, comm_indices):
     """Inter / intra edge ratio for a subset of communities."""
     comm_set = set()
@@ -255,7 +240,6 @@ def inter_intra_ratio(adj, labels, comm_indices):
             inter += w
     return inter / intra if intra > 0 else np.inf
 
-
 def spatial_region_consistency(comm_indices):
     """Majority anatomical region fraction per community."""
     node_channels = np.arange(n) // N_TIMEPOINTS
@@ -268,14 +252,10 @@ def spatial_region_consistency(comm_indices):
         props.append(cts.max() / len(subset))
     return float(np.mean(props)) if props else 0.0
 
-
 def _fmt(v):
     return "   inf  " if np.isinf(v) else f"{v:8.4f}"
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  COMPUTE METRICS
-# ══════════════════════════════════════════════════════════════════════════════
+# COMPUTE METRICS
 print("\nComputing structural metrics ...")
 adj_csr = adj.tocsr()
 
@@ -290,16 +270,13 @@ print("Computing spatial region consistency ...")
 inter_src = spatial_region_consistency(inter_comm_idx)
 ictal_src  = spatial_region_consistency(ictal_comm_idx)
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  PRINT SUMMARY
-# ══════════════════════════════════════════════════════════════════════════════
+# PRINT SUMMARY
 W = 34
-print(f"\n{'═' * 67}")
+print(f"\n{'=' * 67}")
 print(f"  BENCHMARK SUMMARY — Moore Streaming  ·  CHB-01 chb01_03")
-print(f"{'═' * 67}")
+print(f"{'=' * 67}")
 print(f"  {'Metric':<{W}} {'Interictal':>10}  {'Ictal':>10}")
-print(f"  {'─' * 62}")
+print(f"  {'-' * 62}")
 rows_data = [
     ("Intra-Cluster Edge Density",  inter_iced,  ictal_iced),
     ("Inter / Intra Edge Ratio",    inter_ratio, ictal_ratio),
@@ -308,13 +285,13 @@ rows_data = [
 ]
 for name, iv, av in rows_data:
     print(f"  {name:<{W}} {_fmt(iv)}  {_fmt(av)}")
-print(f"  {'─' * 62}")
+print(f"  {'-' * 62}")
 print(f"  {'ARI between runs':<{W}}   1.0000 ± 0.0000  (deterministic)")
 print(f"  {'NMI between runs':<{W}}   1.0000 ± 0.0000  (deterministic)")
-print(f"  {'─' * 62}")
+print(f"  {'-' * 62}")
 print(f"  {'Runtime (full graph)':<{W}} {runtime:8.2f} s")
 print(f"  {'Peak Memory Usage':<{W}} {peak_mem / 1e6:8.1f} MB")
-print(f"  {'─' * 62}")
+print(f"  {'-' * 62}")
 print(f"  {'Intra-Community Bandpower Var':<{W}}      N/A        N/A")
 print(f"  {'Spatial Region Consistency':<{W}} {_fmt(inter_src)}  {_fmt(ictal_src)}")
-print(f"{'═' * 67}\n")
+print(f"{'=' * 67}\n")

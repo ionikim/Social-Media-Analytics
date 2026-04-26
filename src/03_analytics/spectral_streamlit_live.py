@@ -19,7 +19,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ── constants ──────────────────────────────────────────────────────────────
+# constants
 NPZ_PATH     = (
     Path(__file__).resolve().parents[2]
     / "data" / "graphs" / "adjacency_sparse"
@@ -48,10 +48,7 @@ INTERICTAL_CLR = "#7c6af7"
 ICTAL_CLR      = "#f7936a"
 CLUSTER_COLORS = ["#7c6af7", "#f7936a", "#5ecfb1", "#e05c97", "#f5d547"]
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  SPECTRAL CLUSTERING CORE  (pure numpy, no sklearn)
-# ══════════════════════════════════════════════════════════════════════════════
+# SPECTRAL CLUSTERING CORE  (pure numpy, no sklearn)
 
 def build_adjacency(corr, threshold):
     A = corr.copy()
@@ -59,7 +56,6 @@ def build_adjacency(corr, threshold):
     A[A < 0]         = 0.0
     np.fill_diagonal(A, 0.0)
     return A
-
 
 def normalized_laplacian(A):
     degree     = A.sum(axis=1)
@@ -69,17 +65,14 @@ def normalized_laplacian(A):
     D          = np.diag(d_inv_sqrt)
     return np.eye(N_CHANNELS) - D @ A @ D
 
-
 def spectral_embed(L, k):
     vals, vecs = np.linalg.eigh(L)
     return vecs[:, :k], vals
-
 
 def normalize_rows(X):
     norms = np.linalg.norm(X, axis=1, keepdims=True)
     norms[norms == 0] = 1.0
     return X / norms
-
 
 def kmeans_scratch(X, k, n_init=8, max_iter=200, tol=1e-6, seed=42):
     rng          = np.random.default_rng(seed)
@@ -116,7 +109,6 @@ def kmeans_scratch(X, k, n_init=8, max_iter=200, tol=1e-6, seed=42):
 
     return best_labels
 
-
 def spectral_clustering(corr, k, threshold):
     A          = build_adjacency(corr, threshold)
     L          = normalized_laplacian(A)
@@ -124,7 +116,6 @@ def spectral_clustering(corr, k, threshold):
     emb        = normalize_rows(emb)
     labels     = kmeans_scratch(emb, k)
     return labels, vals, emb
-
 
 def align_labels(ref, new, k):
     perm, used = {}, set()
@@ -140,10 +131,7 @@ def align_labels(ref, new, k):
         used.add(best_nc)
     return np.array([perm.get(l, l) for l in new])
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  CACHED PRECOMPUTATION
-# ══════════════════════════════════════════════════════════════════════════════
+# CACHED PRECOMPUTATION
 
 @st.cache_data(show_spinner="Precomputing spectral clustering for all windows…")
 def precompute(window_sec, step_sec, k, threshold):
@@ -193,10 +181,7 @@ def precompute(window_sec, step_sec, k, threshold):
 
     return all_labels, all_eigenvalues, all_embeddings, all_corrs, eigengap, t_starts, t_centers_sec
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  SIDEBAR
-# ══════════════════════════════════════════════════════════════════════════════
+# SIDEBAR
 
 st.sidebar.title("🧠 Spectral Clustering Demo")
 st.sidebar.markdown(
@@ -215,10 +200,7 @@ speed      = st.sidebar.slider("Speed (s per frame)", 0.2, 3.0, 1.0, step=0.1)
 st.sidebar.divider()
 playing = st.sidebar.toggle("▶  Auto-play", value=True)
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  LOAD DATA
-# ══════════════════════════════════════════════════════════════════════════════
+# LOAD DATA
 
 all_labels, all_eigenvalues, all_embeddings, all_corrs, eigengap, t_starts, t_centers_sec = precompute(
     window_sec, step_sec, k, threshold
@@ -226,13 +208,13 @@ all_labels, all_eigenvalues, all_embeddings, all_corrs, eigengap, t_starts, t_ce
 n_frames     = len(all_labels)
 colors_k     = CLUSTER_COLORS[:k]
 
-# ── session state ─────────────────────────────────────────────────────────
+# session state
 if "frame" not in st.session_state:
     st.session_state.frame = 0
 if st.session_state.frame >= n_frames:
     st.session_state.frame = 0
 
-# ── manual slider when paused ────────────────────────────────────────────
+# manual slider when paused
 if not playing:
     st.session_state.frame = st.slider("Frame", 0, n_frames - 1, st.session_state.frame)
 
@@ -243,10 +225,7 @@ t_c   = t_centers_sec[frame]
 phase = "ICTAL" if t_c > ONSET_SEC else "Interictal"
 color = ICTAL_CLR if t_c > ONSET_SEC else INTERICTAL_CLR
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  HEADER
-# ══════════════════════════════════════════════════════════════════════════════
+# HEADER
 
 st.title("Laplacian Spectral Clustering · EEG Seizure Transition")
 st.markdown(
@@ -261,10 +240,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  PLOT 1 — cluster assignment per channel  (full width, viewport height)
-# ══════════════════════════════════════════════════════════════════════════════
+# PLOT 1 — cluster assignment per channel  (full width, viewport height)
 
 labels_now = all_labels[frame]
 emb_now    = all_embeddings[frame]
@@ -297,10 +273,7 @@ plt.tight_layout()
 st.pyplot(fig, width="stretch")
 plt.close(fig)
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  PLOT 2 — eigenspace scatter  (full width, viewport height)
-# ══════════════════════════════════════════════════════════════════════════════
+# PLOT 2 — eigenspace scatter  (full width, viewport height)
 
 st.divider()
 st.subheader("2 · Eigenspace Embedding")
@@ -335,10 +308,7 @@ plt.tight_layout()
 st.pyplot(fig, width="stretch")
 plt.close(fig)
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  PLOT 3 — eigenvalue spectrum  (full width, viewport height)
-# ══════════════════════════════════════════════════════════════════════════════
+# PLOT 3 — eigenvalue spectrum  (full width, viewport height)
 
 st.divider()
 st.subheader("3 · Laplacian Eigenvalue Spectrum")
@@ -367,10 +337,7 @@ plt.tight_layout()
 st.pyplot(fig, width="stretch")
 plt.close(fig)
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  PLOT 4 — eigengap trace  (full width, viewport height)
-# ══════════════════════════════════════════════════════════════════════════════
+# PLOT 4 — eigengap trace  (full width, viewport height)
 
 st.divider()
 st.subheader("4 · Cluster Separation Strength over Time")
@@ -400,10 +367,7 @@ plt.tight_layout()
 st.pyplot(fig, width="stretch")
 plt.close(fig)
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  PLOT 5 — raster carpet  (full width, viewport height)
-# ══════════════════════════════════════════════════════════════════════════════
+# PLOT 5 — raster carpet  (full width, viewport height)
 
 st.divider()
 st.subheader("5 · All Cluster Assignments over Time")
@@ -442,10 +406,7 @@ plt.tight_layout()
 st.pyplot(fig, width="stretch")
 plt.close(fig)
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  AUTO-PLAY LOOP
-# ══════════════════════════════════════════════════════════════════════════════
+# AUTO-PLAY LOOP
 
 if playing:
     time.sleep(speed)

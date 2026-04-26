@@ -20,7 +20,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ── constants ──────────────────────────────────────────────────────────────
+# constants
 NPZ_PATH      = (
     Path(__file__).resolve().parents[2]
     / "data" / "graphs" / "adjacency_sparse"
@@ -49,7 +49,7 @@ INTERICTAL_CLR = "#7c6af7"
 ICTAL_CLR      = "#f7936a"
  
  
-# ── cached data loading ────────────────────────────────────────────────────
+# cached data loading
 @st.cache_resource(show_spinner="Loading data and precomputing windows…")
 def load_and_precompute(window_sec, step_sec):
     mat            = sp.load_npz(NPZ_PATH)
@@ -84,7 +84,7 @@ def load_and_precompute(window_sec, step_sec):
     return all_corrs, mean_corr, t_starts, t_centers_sec, order
  
  
-# ── sidebar ────────────────────────────────────────────────────────────────
+# sidebar
 st.sidebar.title("🧠 EEG Network Demo")
 st.sidebar.markdown(
     "**Dataset:** CHB-MIT · chb01_03  \n"
@@ -104,7 +104,7 @@ show_dendro = st.sidebar.checkbox("Show dendrogram", value=False)
 st.sidebar.divider()
 playing = st.sidebar.toggle("▶  Auto-play", value=True)
  
-# ── load data ──────────────────────────────────────────────────────────────
+# load data
 all_corrs, mean_corr, t_starts, t_centers_sec, order = load_and_precompute(window_sec, step_sec)
 labels   = [CHANNEL_NAMES[i] for i in order]
 n_frames = len(all_corrs)
@@ -112,18 +112,18 @@ n_frames = len(all_corrs)
 def reorder(m):
     return m[np.ix_(order, order)]
  
-# ── session state for current frame ────────────────────────────────────────
+# session state for current frame
 if "frame" not in st.session_state:
     st.session_state.frame = 0
  
-# ── header ─────────────────────────────────────────────────────────────────
+# header
 st.title("EEG Network Transition: Interictal → Ictal")
 st.markdown(
     "Watch the functional connectivity network reorganise as the seizure begins. "
     "The **red dashed line** marks seizure onset at **+16 s**."
 )
  
-# ── manual frame control (visible when paused) ─────────────────────────────
+# manual frame control (visible when paused)
 if not playing:
     st.session_state.frame = st.slider(
         "Frame", 0, n_frames - 1, st.session_state.frame
@@ -143,7 +143,7 @@ st.markdown(
     unsafe_allow_html=True
 )
  
-# ── plots ──────────────────────────────────────────────────────────────────
+# plots
 col1, col2 = st.columns([1.6, 1], gap="large")
  
 with col1:
@@ -189,7 +189,7 @@ with col2:
     st.pyplot(fig, use_container_width=True)
     plt.close(fig)
  
-# ── optional dendrogram ────────────────────────────────────────────────────
+# optional dendrogram
 if show_dendro:
     st.divider()
     dist_w = squareform(1.0 - np.clip(all_corrs[frame], -1, 1), checks=False)
@@ -210,7 +210,7 @@ if show_dendro:
     st.pyplot(fig, use_container_width=True)
     plt.close(fig)
  
-# ── auto-play loop ─────────────────────────────────────────────────────────
+# auto-play loop
 if playing:
     time.sleep(speed)
     st.session_state.frame = (frame + 1) % n_frames
