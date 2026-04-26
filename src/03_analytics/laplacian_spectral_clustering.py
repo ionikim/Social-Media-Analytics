@@ -20,13 +20,23 @@ Run with:  python3 eeg_spectral_clustering.py
 """
  
 import warnings
+from pathlib import Path
 import numpy as np
 import scipy.sparse as sp
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
- 
+
+# ── project root (works on any machine, regardless of clone location) ───────
+# This file lives at <project_root>/src/03_analytics/
+_HERE = Path(__file__).resolve().parent
+BASE_DIR = _HERE.parents[1]          # go up: 03_analytics → src → project root
+
 # ── configuration ──────────────────────────────────────────────────────────
-NPZ_PATH     = '/Users/antoniaspoerk/Desktop/Digital Neuroscience /Social Media Analytics/epilepsy_pediatrics_EEG/data/graphs/adjacency_sparse/inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz'
+NPZ_PATH = (
+    BASE_DIR
+    / "data" / "graphs" / "adjacency_sparse"
+    / "inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz"
+)
 N_CHANNELS   = 23
 N_TIMEPOINTS = 7680
 FS           = 256
