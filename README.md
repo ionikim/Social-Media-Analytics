@@ -61,8 +61,19 @@ jupyter lab
 ---
 ## Project Description
 
-The goal of this project is to analyze the temporal evolution of brain connectivity networks during and between epileptic seizures using pediatric EEG recordings. By constructing Visibility Graphs (VG) from EEG signals and applying network analysis methods, we aim to identify how network structure changes between normal brain activity (interictal) and seizure (ictal) periods.
-We analyze an EEG dataset with epileptic seizures from the CHB-MIT database. The input of our data pipeline consists of electrode recordings from one patient (CHB01), representing the electrical activity of brain states 15 seconds before and during a seizure as a time series. We construct a Visibility Graph directly from the raw EEG time series — each timepoint becomes a node, and two timepoints are connected if no taller amplitude value blocks the line of sight between them. This graph-based representation captures the regularity and periodicity of the EEG signal without requiring correlation computation. We analyze how the VG structure evolves second by second across 30 windows, enabling us to identify seizure onset and quantify the transition from complex irregular brain activity to rhythmic ictal activity.
+This project analyzes the temporal evolution of brain connectivity networks across epileptic seizure transitions using pediatric EEG recordings from the CHB-MIT Scalp EEG Database. We focused on a single patient (CHB01) and a 30-second segment centered on seizure onset — 15 seconds of interictal (normal) activity followed by 15 seconds of ictal (seizure) activity — recorded across 23 EEG channels at 256 Hz.
+
+**Preprocessing.** Raw EDF recordings were re-referenced and bandpass filtered. Signals were segmented into time windows and organized into a structured DataFrame for downstream graph construction.
+
+**Graph construction.** Rather than computing pairwise electrode correlations, we built a Horizontal Visibility Graph (HVG) separately for each electrode's time series. Two timepoints are connected if no intermediate amplitude value exceeds both of them, capturing the temporal regularity and periodicity of the signal. A continuous HVG was then constructed across the full 30-second interictal-to-ictal window, resulting in a sparse adjacency matrix of size 176,640 × 176,640 representing all connections across 23 electrodes and 7,680 timepoints.
+
+**Community detection.** Three algorithms were implemented from scratch and applied to the HVG adjacency matrix. The **Stream-Moore algorithm** (streaming modularity maximisation) proved unsuitable due to near-uniform node degree (~22) and negative modularity (Q ≈ −0.0001). The **Label Propagation Algorithm (LPA)** was applied directly to the adjacency matrix. **Laplacian Spectral Clustering** constructed weighted adjacency graphs from thresholded channel correlation matrices, computed the normalised graph Laplacian, and clustered channels in eigenspace using a custom k-means++ implementation. Additionally, **Ward linkage hierarchical clustering** was applied across sliding 5-second windows to track how functional channel groupings evolve over time.
+
+**Benchmarking.** All algorithms were evaluated using structural quality metrics computed without ground truth labels: intra-cluster edge density, inter/intra edge ratio, conductance, and average clustering coefficient, measured separately for interictal and ictal windows alongside runtime and memory usage.
+
+**Visualization.** Network structure was visualized using Gephi (static MHVG and OPTN graphs), Cosmograph (frequency-weighted animated and static views across all 23 electrodes), HTML-based interactive circular visibility graphs, and three interactive Streamlit apps showing the sliding window correlation network, hierarchical clustering, and spectral clustering live as the seizure unfolds.
+
+**Key finding.** Laplacian spectral clustering produced the clearest seizure signal: the eigengap peaked sharply just before seizure onset and collapsed during the ictal phase, indicating a brief period of unusually strong cluster separation immediately preceding the seizure.
 ---
 ### 1) Network Loading & Data Management (Ji-one Kim, Marina Köhli): 
 
