@@ -7,6 +7,53 @@
 | Simon | KRUMMENACHER | @simonkrummenacher |
 
 # Temporal and Spatial Network Evolution in Pediatric EEG during Ictal and Interictal Periods
+
+## How to Run
+
+### 1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Python scripts
+
+Run from the **project root** (`epilepsy_pediatrics_EEG/`):
+
+| Script | What it does | Command |
+| :----- | :----------- | :------ |
+| `analysis/main.py` | LPA community detection on the adjacency matrix | `python analysis/main.py` |
+| `src/03_analytics/lpa.py` | Label Propagation Algorithm | `python src/03_analytics/lpa.py` |
+| `src/03_analytics/eeg_transition_analysis.py` | Sliding window analysis — saves 4 PNG plots + 1 GIF | `python src/03_analytics/eeg_transition_analysis.py` |
+| `src/03_analytics/laplacian_spectral_clustering.py` | Spectral clustering — saves 4 PNG plots | `python src/03_analytics/laplacian_spectral_clustering.py` |
+| `src/03_analytics/stream_moore_benchmark.py` | Stream-Moore benchmark metrics | `python src/03_analytics/stream_moore_benchmark.py` |
+
+### 3. Interactive Streamlit apps
+
+```bash
+streamlit run src/03_analytics/eeg_streamlit_app.py          # manual slider
+streamlit run src/03_analytics/eeg_streamlit_app_live.py     # auto-play animation
+streamlit run src/03_analytics/spectral_streamlit_live.py    # spectral clustering live
+```
+
+### 4. Jupyter notebooks
+
+Launch JupyterLab from the project root and open notebooks in `src/`:
+
+```bash
+jupyter lab
+```
+
+| Folder | Contents |
+| :----- | :------- |
+| `src/01_loading/` | EEG preprocessing and visibility graph construction |
+| `src/02_management/` | Data format conversion (NPZ → CSV) |
+| `src/04_visualization/` | Gephi export, heatmaps, Cosmograph files |
+
+> **Note:** The raw EEG data (`data/raw/chb01_03.edf`) and precomputed adjacency matrix (`data/graphs/adjacency_sparse/`) are included in the repo via Git LFS. Run `git lfs pull` if the files appear as pointers.
+
+---
+
 ## Research Questions
 1. How does the Visibility Graph structure (degree, edge density) change between interictal and ictal periods?
 2. Do specific electrodes show consistently higher VG activity during seizure periods?
