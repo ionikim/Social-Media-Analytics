@@ -24,6 +24,8 @@ NPZ_PATH     = (
     / "data" / "graphs" / "adjacency_sparse"
     / "inter_to_ict_chb01_03_2980_3010_adjacency_sparse.npz"
 )
+FIGURES_DIR  = Path(__file__).resolve().parents[2] / "reports" / "figures"
+FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 N_CHANNELS   = 23
 N_TIMEPOINTS = 7680    # 30 s x 256 Hz
 FS           = 256
@@ -119,9 +121,13 @@ ax.set_title("Global Network Synchrony  .  CHB-01  .  chb01_03  .  2980-3010 s",
 ax.tick_params(colors=TEXT)
 ax.legend(facecolor=PANEL_BG, edgecolor="#444", labelcolor=TEXT, fontsize=9)
 plt.tight_layout()
-fig.savefig("plot1_synchrony.png", dpi=150, bbox_inches="tight", facecolor=BG)
+_out = FIGURES_DIR / "plot1_synchrony.png"
+if not _out.exists():
+    fig.savefig(_out, dpi=150, bbox_inches="tight", facecolor=BG)
+    print(f"  Saved -> {_out.name}")
+else:
+    print(f"  Skipped (already exists) -> {_out.name}")
 plt.close(fig)
-print("  Saved -> plot1_synchrony.png")
  
  
 # plot 2: interictal vs ictal heatmaps
@@ -156,9 +162,13 @@ for ax, corr_m, title, accent in zip(
     cbar.outline.set_edgecolor(PANEL_BG)
  
 plt.tight_layout()
-fig.savefig("plot2_interictal_vs_ictal.png", dpi=150, bbox_inches="tight", facecolor=BG)
+_out = FIGURES_DIR / "plot2_interictal_vs_ictal.png"
+if not _out.exists():
+    fig.savefig(_out, dpi=150, bbox_inches="tight", facecolor=BG)
+    print(f"  Saved -> {_out.name}")
+else:
+    print(f"  Skipped (already exists) -> {_out.name}")
 plt.close(fig)
-print("  Saved -> plot2_interictal_vs_ictal.png")
  
  
 # plot 3: animated sliding window
@@ -219,9 +229,13 @@ def animate(frame):
     return im, heat_title, cursor_dot, cursor_line
  
 anim = FuncAnimation(fig, animate, frames=n_frames, interval=600, blit=True, repeat=True)
-anim.save("plot3_animation.gif", writer="pillow", fps=2, dpi=120)
+_out = FIGURES_DIR / "plot3_animation.gif"
+if not _out.exists():
+    anim.save(_out, writer="pillow", fps=2, dpi=120)
+    print(f"  Saved -> {_out.name}")
+else:
+    print(f"  Skipped (already exists) -> {_out.name}")
 plt.close(fig)
-print("  Saved -> plot3_animation.gif")
  
  
 # plot 4: dendrogram grid
@@ -258,11 +272,15 @@ for i, ax in enumerate(axes.flat):
                  color=color, fontsize=6, pad=3)
  
 plt.tight_layout()
-fig.savefig("plot4_dendrogram_grid.png", dpi=150, bbox_inches="tight", facecolor=BG)
+_out = FIGURES_DIR / "plot4_dendrogram_grid.png"
+if not _out.exists():
+    fig.savefig(_out, dpi=150, bbox_inches="tight", facecolor=BG)
+    print(f"  Saved -> {_out.name}")
+else:
+    print(f"  Skipped (already exists) -> {_out.name}")
 plt.close(fig)
-print("  Saved -> plot4_dendrogram_grid.png")
- 
-print("\nAll done. Output files:")
+
+print(f"\nAll done. Figures in: {FIGURES_DIR}")
 print("  plot1_synchrony.png")
 print("  plot2_interictal_vs_ictal.png")
 print("  plot3_animation.gif")

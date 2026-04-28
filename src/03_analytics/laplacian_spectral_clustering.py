@@ -30,6 +30,8 @@ import matplotlib.gridspec as gridspec
 # This file lives at <project_root>/src/03_analytics/
 _HERE = Path(__file__).resolve().parent
 BASE_DIR = _HERE.parents[1]          # go up: 03_analytics → src → project root
+FIGURES_DIR = BASE_DIR / "reports" / "figures"
+FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 # configuration
 NPZ_PATH = (
@@ -422,9 +424,13 @@ ax.legend(handles=legend_elements, facecolor=PANEL_BG, edgecolor="#444",
           labelcolor=TEXT, fontsize=8, loc="upper left")
  
 plt.tight_layout()
-fig.savefig("spectral_plot1_raster.png", dpi=150, bbox_inches="tight", facecolor=BG)
+_out = FIGURES_DIR / "spectral_plot1_raster.png"
+if not _out.exists():
+    fig.savefig(_out, dpi=150, bbox_inches="tight", facecolor=BG)
+    print(f"  Saved -> {_out.name}")
+else:
+    print(f"  Skipped (already exists) -> {_out.name}")
 plt.close(fig)
-print("  Saved -> spectral_plot1_raster.png")
  
  
 # PLOT 2 — eigengap over time
@@ -457,9 +463,13 @@ ax.tick_params(colors=TEXT)
 ax.legend(facecolor=PANEL_BG, edgecolor="#444", labelcolor=TEXT, fontsize=9)
  
 plt.tight_layout()
-fig.savefig("spectral_plot2_eigengap.png", dpi=150, bbox_inches="tight", facecolor=BG)
+_out = FIGURES_DIR / "spectral_plot2_eigengap.png"
+if not _out.exists():
+    fig.savefig(_out, dpi=150, bbox_inches="tight", facecolor=BG)
+    print(f"  Saved -> {_out.name}")
+else:
+    print(f"  Skipped (already exists) -> {_out.name}")
 plt.close(fig)
-print("  Saved -> spectral_plot2_eigengap.png")
  
  
 # PLOT 3 — interictal vs ictal cluster maps (which channels in which cluster)
@@ -510,9 +520,13 @@ for ax, majority, title, accent in zip(
     ax.tick_params(colors=TEXT)
  
 plt.tight_layout()
-fig.savefig("spectral_plot3_cluster_map.png", dpi=150, bbox_inches="tight", facecolor=BG)
+_out = FIGURES_DIR / "spectral_plot3_cluster_map.png"
+if not _out.exists():
+    fig.savefig(_out, dpi=150, bbox_inches="tight", facecolor=BG)
+    print(f"  Saved -> {_out.name}")
+else:
+    print(f"  Skipped (already exists) -> {_out.name}")
 plt.close(fig)
-print("  Saved -> spectral_plot3_cluster_map.png")
  
  
 # PLOT 4 — eigenvalue spectrum for one interictal vs one ictal window
@@ -552,14 +566,19 @@ for ax, win_idx, title, accent in zip(
     ax.legend(facecolor=PANEL_BG, edgecolor="#444", labelcolor=TEXT, fontsize=8)
  
 plt.tight_layout()
-fig.savefig("spectral_plot4_eigenspectrum.png", dpi=150, bbox_inches="tight", facecolor=BG)
+_out = FIGURES_DIR / "spectral_plot4_eigenspectrum.png"
+if not _out.exists():
+    fig.savefig(_out, dpi=150, bbox_inches="tight", facecolor=BG)
+    print(f"  Saved -> {_out.name}")
+else:
+    print(f"  Skipped (already exists) -> {_out.name}")
 plt.close(fig)
-print("  Saved -> spectral_plot4_eigenspectrum.png")
- 
-print("\nAll done. Output files:")
+
+print(f"\nAll done. Figures in: {FIGURES_DIR}")
 print("  spectral_plot1_raster.png        — cluster assignments over time")
 print("  spectral_plot2_eigengap.png      — cluster separation strength over time")
 print("  spectral_plot3_cluster_map.png   — interictal vs ictal cluster membership")
+print("  spectral_plot4_eigenspectrum.png — eigenvalue spectrum comparison")
 print("  spectral_plot4_eigenspectrum.png — Laplacian eigenvalue spectrum")
 
 # BENCHMARK METRICS  (all from scratch — numpy + stdlib only)
