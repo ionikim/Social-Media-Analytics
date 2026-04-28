@@ -71,7 +71,9 @@ This project analyzes the temporal evolution of brain connectivity networks acro
 
 **Benchmarking.** All algorithms were evaluated using structural quality metrics computed without ground truth labels: intra-cluster edge density, inter/intra edge ratio, conductance, and average clustering coefficient, measured separately for interictal and ictal windows alongside runtime and memory usage.
 
-**Visualization.** Network structure was visualized using Gephi (static MHVG and OPTN graphs), Cosmograph (frequency-weighted animated and static views across all 23 electrodes), HTML-based interactive circular visibility graphs, and three interactive Streamlit apps showing the sliding window correlation network, hierarchical clustering, and spectral clustering live as the seizure unfolds.---
+**Visualization.** Network structure was visualized using Gephi (static MHVG and OPTN graphs), Cosmograph (frequency-weighted animated and static views across all 23 electrodes), HTML-based interactive circular visibility graphs, and three interactive Streamlit apps showing the sliding window correlation network, hierarchical clustering, and spectral clustering live as the seizure unfolds.
+
+---
 ### 1) Network Loading & Data Management (Ji-one Kim, Marina Köhli): 
 
 We use data from the CHB-MIT Scalp EEG Database, which includes EEG recordings from 5 male patients (ages 3–22) and 17 female patients (ages 1.5–19) with intractable seizures. The recordings contain 23 EEG channels sampled at 256 Hz with 16-bit resolution and are provided in EDF (European Data Format). For this project, we focus on one patient (CHB01) and analyze a 30-second segment centered on seizure onset, consisting of 15 seconds of pre-ictal activity and 15 seconds of ictal activity.
