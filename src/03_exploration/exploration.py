@@ -133,3 +133,66 @@ summary = {
 print("\nSummary statistics:")
 for k, v in summary.items():
     print(f"{k:25s}: {v}")
+
+# ======================================================
+# 10. Temporal network exploration (NEW – Figure 5)
+# ======================================================
+"""
+Purpose:
+Assess temporal non-stationarity of EEG-derived networks.
+This motivates the use of adaptive / streaming community detection.
+"""
+
+# ------------------------------------------------------
+# Assumption:
+# NPZ file contains a sequence of adjacency matrices
+# (sliding windows over time)
+# ------------------------------------------------------
+
+# Reload full object (may contain multiple windows)
+npz = np.load(DATA_PATH, allow_pickle=True)
+A_all = npz[npz.files[0]]
+
+# Sanity check: only do temporal analysis if multiple windows exist
+if isinstance(A_all, np.ndarray) and A_all.dtype == object and len(A_all) > 1:
+
+    mean_strength_over_time = []
+    mean_weight_over_time = []
+    clustering_over_time = []
+
+    for A_t in A_all:
+        G_t = nx.from_scipy_sparse_array(A_t, edge_attribute="weight")
+
+        # Mean node strength
+        strengths_t = [s for _, s in G_t.degree(weight="weight")]
+        mean_strength_over_time.append(np.mean(strengths_t))
+
+        # Mean edge weight
+        weights_t = [d["weight"] for _, _, d in G_t.edges(data=True)]
+        mean_weight_over_time.append(np.mean(weights_t))
+
+        # Global clustering
+        clustering_over_time.append(
+            nx.average_clustering(G_t, weight="weight")
+        )
+
+    # --------------------------------------------------
+    # Plot temporal evolution (Figure 5)
+    # --------------------------------------------------
+    plt.figure(figsize=(7, 4))
+    plt.plot(mean_strength_over_time, label="Mean node strength")
+    plt.plot(mean_weight_over_time, label="Mean edge weight")
+    plt.plot(clustering_over_time, label="Global clustering")
+
+    plt.xlabel("Time window")
+    plt.ylabel("Network-level metric value")
+    plt.title("Temporal evolution of EEG network properties")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+else:
+    print(
+        "Temporal analysis skipped: "
+        "only a single adjacency matrix found."
+    )
